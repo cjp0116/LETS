@@ -32,6 +32,13 @@ function NavbarOrange({ logout }) {
         </NavItem>
         <NavItem>
           <NavLink tag={Link} to={`/profile/${currentUser.username}`}>
+            <i className="ni ni-bell-55" />
+            
+          </NavLink>
+        </NavItem>
+
+        <NavItem>
+          <NavLink tag={Link} to={`/profile/${currentUser.username}`}>
             <i className="ni ni-circle-08" />
             Profile
           </NavLink>
