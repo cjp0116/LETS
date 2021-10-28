@@ -4,11 +4,16 @@ import {
   Media,
   Col,
   Button,
+  UncontrolledDropdown,
+  DropdownMenu,
   UncontrolledTooltip,
+  DropdownToggle,
+  DropdownItem,
 } from "reactstrap";
+import { MoreVert } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
-const ChatHeader = ({ members }) => {
+const ChatHeader = ({ members, handleLeaveRoom }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <Row>
@@ -41,11 +46,24 @@ const ChatHeader = ({ members }) => {
           </Media>
         </Media>
       </Col>
-      <Col md="1" xs="3">
 
-      </Col>
       <Col md="1" xs="3">
-
+        <UncontrolledDropdown>
+          <DropdownToggle color="transparent" role="button" size="sm">
+            <MoreVert />
+          </DropdownToggle>
+          <DropdownMenu>
+          <DropdownItem onClick={handleLeaveRoom}>
+            <span>Leave</span>
+          </DropdownItem>
+          <DropdownItem>
+            <span>Add</span>
+          </DropdownItem>
+          <DropdownItem>
+            <span>Deactivate Notification</span>
+          </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
       </Col>
     </Row>
   );

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require("../middleware/auth");
 const db = require("../db");
+const { BadRequestError } = require("../ExpressError");
 
 
 // new convo
@@ -11,7 +12,7 @@ const db = require("../db");
 // 	name,
 // 	members : [ username,  username ]
 // }
-router.post("/:username", async (req, res, next) => {
+router.post("/:username", ensureLoggedIn, async (req, res, next) => {
 	try {
 		const { username } = req.params;
 		const {receiverUsername } = req.body;
@@ -38,6 +39,32 @@ router.post("/:username", async (req, res, next) => {
 		return res.json({ conversation : finalResults  })
 	}
 	catch (e) {
+		return next(e);
+	}
+})
+
+// add participant into an existing room
+router.post("/:username/:roomId", ensureLoggedIn, async (req, res, next) => {
+	try {
+		const { username, roomId } = req.params;
+		const results = await db.query(
+			`INSERT INTO participants (username, room_id) VALUES ($1, $2) RETURNING *`, [username, roomId]
+		);
+		if(!results.rows.length) throw new BadRequestError();
+		return res.json({ success : true })
+	} catch(e) {
+		return next(e);
+	}
+})
+
+// leeave room different from deleting the room.
+router.delete("/:username/:roomId", ensureCorrectUserOrAdmin, async (req, res, next) => {
+	try {
+		const { username, roomId } = req.params;
+		const results = await db.query(`DELETE FROM participants WHERE username = $1 AND room_id = $2 RETURNING *`, [username, roomId]);
+		if(!results.rows.length) throw new BadRequestError();
+		return res.json({ left : roomId })
+	} catch(e) {
 		return next(e);
 	}
 })
@@ -111,5 +138,6 @@ router.delete("/:roomId", async (req, res, next) => {
 		return next(e);
 	}
 })
+
 
 module.exports = router;

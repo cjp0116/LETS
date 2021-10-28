@@ -48,7 +48,7 @@ function NavbarOrange({ logout }) {
 
   const handleReadAll = async () => {
     try {
-      await Promise.all(notifications.map((n) => Api.markAsRead(n.id)));
+      await Promise.all(notifications.map((n) => Api.markAsRead(currentUser.username, n.id)));
       setNotifications([]);
     } catch (e) {
       console.error(e);
@@ -71,26 +71,20 @@ function NavbarOrange({ logout }) {
           <Search />
         </NavItem>
         <NavItem>
-          <NavLink tag={Link} to={`/profile/${currentUser.username}`}>
-            <i className="ni ni-circle-08" />
-            Profile
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink tag={Link} to="/messenger">
+          <NavLink tag={Link} to="/messenger" style={{ color : "white"}}>
             <i className="ni ni-chat-round" />
             Chat
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink tag={Link} to="/friends">
-            <i className="fas fa-users"></i>
+          <NavLink tag={Link} to="/friends" style={{ color : "white" }}>
+            <i className="fas fa-users" />
             Friends
           </NavLink>
         </NavItem>
 
-        <UncontrolledDropdown>
-          <DropdownToggle color="transparent" role="button" size="sm">
+        <UncontrolledDropdown nav>
+          <DropdownToggle className="nav-link" color="transparent" role="button" size="sm">
             <span style={{ color: "white" }}>
               <i className="ni ni-single-02" /> {currentUser.username}
             </span>

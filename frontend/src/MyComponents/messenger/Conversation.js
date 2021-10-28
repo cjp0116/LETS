@@ -35,7 +35,7 @@ const Conversation = ({ conversation }) => {
       setUnreadMessage([])
     } catch(e) {}
   }
-  console.log(unreadMessage)
+  
   return (
     <>
       <ListGroupItem onClick={() => clearUnread()}>

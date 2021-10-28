@@ -97,7 +97,7 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
                 </Col>
                 <div className="col ml--2">
                   <h4 className="mb-0">
-                    <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                    <a href="#" onClick={(e) => e.preventDefault()}>
                       {f.firstName} {f.lastName}
                     </a>
                   </h4>
@@ -114,7 +114,7 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
                   )}
                 </div>
                 <Col className="col-auto">
-                  <Button color="primary" size="sm" type="button">
+                  <Button color="primary" size="sm" type="button" className="btn-round">
                     Add
                   </Button>
                 </Col>

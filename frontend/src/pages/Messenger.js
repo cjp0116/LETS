@@ -38,7 +38,6 @@ function Messenger() {
   const [loading, setLoading] = useState(false);
   const [hideSearchResults, setHideSearchResults] = useState(false);
 
-  const [onlineChatroomMembers, setOnlineChatroomMembers] = useState(null);
   const [currentOnlineRoomId, setCurrentOnlineRoomId] = useState(null);
   const { currentUser, friendsUsernames, socket, currentUserProfileImage } = useContext(UserContext);
 
@@ -55,7 +54,6 @@ function Messenger() {
     socket.on("getTyping", (bool) => setTyping(bool));
     socket.on("done-typing", (bool) => setTyping(bool));
     socket.on("user-joined", (obj) => {
-      setOnlineChatroomMembers(obj.members);
       setCurrentOnlineRoomId(obj.roomId);
     });
   }, []);
@@ -154,10 +152,10 @@ function Messenger() {
         handleNotification(newNotification, user)
       }
       setMessages((messages) => [...messages, message]);
-      setMessage("");
     } catch (e) {
       console.error(e);
     }
+    setMessage("");
   };
 
   const handleNotification = (returnedAPIResponse, user) => {
@@ -166,6 +164,14 @@ function Messenger() {
       receiverName : user,
       returnedAPIResponse
     })
+  }
+
+  const handleLeaveRoom = async (roomId) => {
+    try {
+      await Api.leaveRoom(currentUser.username, roomId);
+      setConversations(conversations.filter(convo => convo.roomId !== roomId))
+      setCurrentChat(null)
+    } catch(e){}
   }
 
 
@@ -181,7 +187,7 @@ function Messenger() {
     })
     .map((name) => {
       return <ListGroupItem>{name}</ListGroupItem>;
-    });
+  });
   console.debug(
     "MessengerConversations=",
     conversations,
@@ -249,7 +255,7 @@ function Messenger() {
                 key={c.roomId}
                 onClick={() => { setCurrentChat(c) }}
               >
-                <Conversation conversation={c} clickedRoomId={c.roomId} />
+                <Conversation conversation={c} />
               </div>
             ))}
           </ListGroup>
@@ -258,9 +264,9 @@ function Messenger() {
         <Col lg="6">
           <Card>
             <CardHeader>
-              {currentChat ? (
-                <ChatHeader members={currentChat?.members} />
-              ) : null}
+              {currentChat && (
+                <ChatHeader members={currentChat?.members} handleLeaveRoom={() => handleLeaveRoom(currentChat?.roomId)} />
+              )}
             </CardHeader>
             <CardBody className="chat-box">
               {currentChat ? (

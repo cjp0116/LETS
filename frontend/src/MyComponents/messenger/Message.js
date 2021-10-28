@@ -39,7 +39,7 @@ const Message = ({ mine, message }) => {
               </p>
               <div>
                 <small className="opacity-60">
-                  <i className="far fa-clock"></i>
+                  <i className="far fa-clock mr-2"></i>
                   {format(message.createdAt)}
                 </small>
               </div>

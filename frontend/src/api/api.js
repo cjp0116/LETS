@@ -167,6 +167,15 @@ class Api {
     return res.conversation;
   }
 
+  static async addParticipantToRoom(username, roomId) {
+    const res = await this.request(`room/${username}/${roomId}`, {}, "POST");
+    return res;
+  }
+
+  static async leaveRoom(username, roomId) {
+    const res = await this.request(`room/${username}/${roomId}`, {}, "DELETE");
+    return res;
+  }
   // NOTIFICATIONS
   static async getUserNotifications(username) {
     const res = await this.request(`notifications/${username}`);
