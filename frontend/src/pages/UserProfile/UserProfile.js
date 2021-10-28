@@ -27,10 +27,6 @@ function UserProfile(props) {
   );
 
   useEffect(() => {
-    setIsMyProfile(username === currentUser?.username);
-  }, [username]);
-
-  useEffect(() => {
     const getLoadedUser = async () => {
       try {
         const user = await Api.getCurrentUser(username);
@@ -39,17 +35,21 @@ function UserProfile(props) {
         console.error(e);
       }
     };
+    getLoadedUser();
+    setIsMyProfile(username === currentUser?.username);
+  }, [username]);
+
+  useEffect(() => {
     const getPostsFullDetails = async () => {
       try {
-        const posts = await Api.getPostsDetailsByUsername(currentUser.username);
+        const posts = await Api.getPostsDetailsByUsername(username);
         setPosts(posts);
       } catch (e) {
         console.error(e);
       }
     };
-    getLoadedUser();
     getPostsFullDetails();
-  }, [currentUser, posts?.length]);
+  }, [username, posts?.length]);
 
   const handleSideBarClick = (tab) => {
     setCurrentTab(tab);
@@ -104,10 +104,10 @@ function UserProfile(props) {
           <div className="profileRightBottom">
             <TabContent id="myTabContent" activeTab={currentTab}>
               <TabPane tabId="Goals" role="tabpanel">
-                {currentUser?.goals?.length === 0 && (
-                    <h2>No goals</h2>                   
+                {loadedUser?.goals?.length === 0 && (
+                  <h2>No goals</h2>
                 )}
-                <Goals isMine={isMyProfile} userGoals={currentUser?.goals} />
+                <Goals isMine={isMyProfile} userGoals={loadedUser?.goals} />
               </TabPane>
 
               <TabPane tabId="Posts" role="tabpanel">
@@ -118,15 +118,16 @@ function UserProfile(props) {
                 ) : (
                   <>
                     {posts?.map((p) => (
-                      <Post
-                        profileImage={currentUser.profileImage}
-                        loadedUser={currentUser}
-                        type="Posts"
-                        post={p}
-                        key={p.id}
-                        friendsUsernames={friendsUsernames}
-                        deletePost={() => deletePost(p.id)}
-                      />
+                      <div key={p.id}>
+                        <Post
+                          profileImage={loadedUser.profileImage}
+                          loadedUser={loadedUser}
+                          type="Posts"
+                          post={p}
+                          friendsUsernames={friendsUsernames}
+                          deletePost={() => deletePost(p.id)}
+                        />
+                      </div>
                     ))}
                   </>
                 )}

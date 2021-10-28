@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
@@ -13,15 +13,16 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-
 } from "reactstrap";
 import AuthContext from "UserContext";
 import Search from "MyComponents/search/Search";
 import Api from "api/api";
+import NotificationAlert from "react-notification-alert";
 import Notifications from "MyComponents/notifications/Notifications";
 import "./navBarDesign.css";
 
 function NavbarOrange({ logout }) {
+  const notify = useRef();
   const { currentUser, socket } = useContext(AuthContext);
   const [collapseOpen, toggleCollapseOpen] = React.useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -39,7 +40,9 @@ function NavbarOrange({ logout }) {
         setNotifications(notifications);
       } catch(e) {}
     }
-    getCurrentUnreadNotifications();
+    currentUser && 
+      currentUser.username &&
+        getCurrentUnreadNotifications();
   }, [currentUser?.username]);
 
   const toggle = () => {
@@ -63,10 +66,14 @@ function NavbarOrange({ logout }) {
       console.error(e);
     }
   };
+  const showAlert = options => {
+    notify.current.notificationAlert(options)
+  }
   console.debug("notifications=",notifications)
   const loggedInNav = () => {
     return (
       <Nav className="ml-lg-auto" navbar>
+         <NotificationAlert ref={notify} zIndex={1031} /> 
         <NavItem>
           <Search />
         </NavItem>
@@ -106,6 +113,7 @@ function NavbarOrange({ logout }) {
           </DropdownMenu>
         </UncontrolledDropdown>
         <Notifications
+          showAlert={showAlert}
           notifications={notifications}
           handleReadAll={handleReadAll}
           handleReadOne={handleReadOne}

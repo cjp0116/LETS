@@ -99,7 +99,8 @@ io.on("connection", socket => {
   });
 
   socket.on("sendNotification", ({ senderName, receiverName, returnedAPIResponse}) => {
-    console.log(senderName, receiverName, returnedAPIResponse)
+    console.log(senderName, receiverName, returnedAPIResponse);
+    if(senderName === receiverName) return;
     const receiver = getUser(receiverName);
     if(!receiver) return;
     io.to(receiver.socketId).emit("getNotification", returnedAPIResponse )

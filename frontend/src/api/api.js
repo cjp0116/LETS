@@ -183,6 +183,7 @@ class Api {
   }
 
   static async postNotifications(username, data) {
+    if(data.sentTo === username) return;
     const res = await this.request(`notifications/${username}`, data, "POST")
     return res.notification
   }

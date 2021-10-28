@@ -5,25 +5,8 @@ import UserContext from "UserContext";
 import SendFriendRequestButton from "MyComponents/SendFriendRequestButton";
 import "./rightbar.css";
 
-const Online = (user) => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  return (
-    <li className="rightbarFriend">
-      <div className="rightbarProfileImgContainer">
-        <img
-          className="rightbarProfileImg"
-          src={PF + user.profileImage || require("assets/img/placeholder.jpg")}
-          alt=""
-        />
-        <span className="rightbarOnline"></span>
-      </div>
-      <span className="rightbarUsername">{user.username}</span>
-    </li>
-  );
-};
-
 const RightBar = ({ user }) => {
-  const { currentUser, friendsUsernames} = useContext(UserContext);
+  const { currentUser, friendsUsernames } = useContext(UserContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
 
@@ -46,34 +29,23 @@ const RightBar = ({ user }) => {
     getFriends();
   }, [user]);
 
-  const HomeRightBar = () => {
-    return (
-      <>
-        <div className="birthdayContainer">
-          <img className="birthdayImg" src="assets/gift.png" alt="" />
-          <span className="birthdayText">
-            <b>Pola Foster</b> and <b>3 other friends</b> have a birhday today.
-          </span>
-        </div>
-        <img className="rightbarAd" src="assets/ad.png" alt="" />
-        <h4 className="rightbarTitle">Online Friends</h4>
-        <ul className="rightbarFriendList">
-          {friends.map((u) => (
-            <Online key={u.id} user={u} />
-          ))}
-        </ul>
-      </>
-    );
-  };
 
   const ProfileRightBar = () => {
     return (
       <>
-        {user?.username !== currentUser?.username && !friendsUsernames.includes(user?.username) && (
-          <SendFriendRequestButton targetUsername={user.username} />
+        {user?.username !== currentUser?.username 
+          && !friendsUsernames.includes(user?.username) && (
+            <SendFriendRequestButton targetUsername={user.username} />
         )}
-        <h4 className="rightbarTitle">User information</h4>
+        <div className="birthdayContainer">
+          <img className="birthdayImg" src={require("assets/img/gift.png")} alt="" />
+          <span className="birthdayText">
+            <b>Pola Foster</b> and <b>3 other friends</b> have a birhday today.
+          </span>
+        </div>
+        
         <div className="rightbarInfo">
+          <h4 className="rightbarTitle">User information</h4>
           <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">Name:</span>
             <span className="rightbarInfoValue">{user?.firstName + " " + user?.lastName}</span>
@@ -92,12 +64,14 @@ const RightBar = ({ user }) => {
           </div>
         </div>
 
-        <h4 className="rightbarTitle">User friends</h4>
-        <div className="rightbarFollowings">
+        
+        <div className="rightbarFollowingContainer">
+          <h4 className="rightbarTitle">User friends</h4>
           {friends.map((friend) => (
             <Link
               to={"/profile/" + friend.username}
               style={{ textDecoration: "none" }}
+              key={friend.username}
             >
               <div className="rightbarFollowing">
                 <img
@@ -121,8 +95,7 @@ const RightBar = ({ user }) => {
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
-        {/* {HomeRightBar()} */}
-        {user ? ProfileRightBar() : HomeRightBar()}
+        {user? ProfileRightBar() : null}
       </div>
     </div>
   );

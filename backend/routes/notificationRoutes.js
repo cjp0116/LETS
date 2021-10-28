@@ -23,6 +23,7 @@ router.post("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
    try {
       const { username } = req.params;
       const { sentTo, notificationType, identifier, senderProfileImage } = req.body;
+      if (sentTo === username) return;
       let type;
       if (notificationType === "message") {
          type = "room_id"
@@ -32,6 +33,16 @@ router.post("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
       }
       else if (notificationType === "comment") {
          type = "comment_id"
+      }
+      else if (notificationType === "friend_request") {
+         const newNoti = await db.query(
+            `INSERT 
+               INTO notifications 
+               (sent_by, sent_to, sender_profile_image, notification_type)
+               VALUES
+               ($1, $2, $3, $4) RETURNING *`,
+            [username, sentTo, senderProfileImage, notificationType]);
+         return res.json({ notification: newNoti.rows[0] })
       }
       const newNoti = await db.query(
          `INSERT 
@@ -63,7 +74,8 @@ router.put("/:username/:id", ensureCorrectUserOrAdmin, async (req, res, next) =>
          throw new BadRequestError()
       };
       const updatedNotificationResults = await db.query(
-         `UPDATE notifications SET seen_date = $1, is_seen = $2 WHERE id = $3`, [seenDate, isSeen, id]
+         `UPDATE notifications SET seen_date = $1, is_seen = $2 WHERE id = $3`, 
+         [seenDate, isSeen, id]
       )
       return res.json({ notification: updatedNotificationResults.rows[0] })
    } catch (e) {

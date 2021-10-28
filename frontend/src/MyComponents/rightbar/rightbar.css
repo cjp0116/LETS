@@ -8,13 +8,16 @@
 }
 
 .rightbarWrapper {
-  padding: 20px 20px 0 0;
-  padding-left: 20px;
+  padding : 20px;
 }
 
 .birthdayContainer {
   display: flex;
   align-items: center;
+  padding : 2rem;
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  margin-bottom: 1rem;
+  border-radius: 5px;
 }
 
 .birthdayImg {
@@ -52,6 +55,9 @@
 
 .rightbarInfo {
   margin-bottom: 30px;
+  padding : 2rem;
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  border-radius: 5px;
 }
 
 .rightbarInfoItem {
@@ -68,6 +74,11 @@
   font-weight: 300;
 }
 
+.rightbarFollowingContainer {
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  padding : 1rem;
+}
+
 .rightbarFollowings {
   display: flex;
   flex-wrap: wrap;
@@ -77,13 +88,16 @@
 .rightbarFollowing {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
   cursor: pointer;
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.68);
+  border-radius: 30px;
+  padding : 1rem;
 }
 
 .rightbarFollowingImg {
-  width: 100px;
-  height: 100px;
+  width: 3rem;
+  height: 3rem;
   object-fit: cover;
   border-radius: 5px;
 }

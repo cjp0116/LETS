@@ -3,7 +3,6 @@ import Api from "api/api";
 import UserContext from "UserContext";
 import {
   Card,
-  CardHeader,
   ListGroup,
   ListGroupItem,
   CardBody,
@@ -19,7 +18,7 @@ import {
 import NewGoalFormModal from "MyComponents/NewGoalFormModal";
 import NotificationAlert from "react-notification-alert";
 import "react-notification-alert/dist/animate.css";
-import CardTitle from "reactstrap/lib/CardTitle";
+
 
 const Goals = ({ isMine, userGoals }) => {
   const notify = useRef();
@@ -27,7 +26,6 @@ const Goals = ({ isMine, userGoals }) => {
   const [goals, setGoals] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [checkedIds, setCheckedIds] = useState([]);
-  const [numCompleted, setNumCompleted] = useState(0);
   const deleteOptions = {
     place: "tr",
     message: (
@@ -66,11 +64,7 @@ const Goals = ({ isMine, userGoals }) => {
       })
     );
     setCheckedIds(goals?.filter((goal) => goal.isComplete).map((g) => g.id));
-    const completedArr = goals?.filter((goal) => goal.isComplete);
-    setNumCompleted(completedArr?.length);
   }, [userGoals])
-
-
 
   const addGoal = (newGoal) => {
     console.log("Goals.js newGoal=", newGoal);
@@ -117,7 +111,6 @@ const Goals = ({ isMine, userGoals }) => {
             : goal;
         })
       );
-      setNumCompleted((num) => num + checkedIds.length);
       showNotifications(updateOptions);
     } catch (e) {
       console.error(e);
@@ -145,13 +138,13 @@ const Goals = ({ isMine, userGoals }) => {
 
       <div
         className="header pb-6 d-flex flex-column share"
-        style={{ width: "60vw", position: "absolute", backgroundColor:'#6FB3B8'}}
+        style={{ width: "60vw", position: "absolute" }}
       >
         <Container fluid className="mb-6">
           <div className="header-body">
             <Row className="align-items-center py-4">
               <Col lg="6" xs="7">
-                <h6 className="h2 text-white d-inline-block mb-0">Goals</h6>
+                <h6 className="h2 d-inline-block mb-0">Goals</h6>
               </Col>
               {isMine && (
                 <Col className="text-right" lg="6" xs="5">
@@ -184,47 +177,13 @@ const Goals = ({ isMine, userGoals }) => {
                 </Col>
               )}
             </Row>
-            <Row>
-              <Col md="6">
-                <Card className="card-status">
-                  <CardBody>
-                    <Row>
-                      <div className="col" tag="h5">
-                        <CardTitle
-                          tag="h5"
-                          className="text-uppercase text-muted mb-0"
-                        >
-                          Goals completed
-                        </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
-                          {numCompleted}
-                        </span>
-                      </div>
-                      <Col className="col-auto">
-                        <div className="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
-                          <i className="ni ni-check-bold" />
-                        </div>
-                      </Col>
-                    </Row>
-                    <p className="mt-3 mb-0 text-sm">
-                      <span className="text-success mr-2">
-                        <i className="fa fa-arrow-up" /> 3.48%
-                      </span>
-                      <span className="text-nowrap">Since last month</span>
-                    </p>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
+      
           </div>
         </Container>
         <Container className="mt--6" fluid>
           <Row>
             <Col xl="12">
               <Card>
-                <CardHeader className="d-flex align-items-center">
-                  <h5 className="h3 mb-0">Goals</h5>
-                </CardHeader>
                 <CardBody>
                   <ListGroup data-toggle="checklist" flush>
                     {goals?.map(
@@ -237,7 +196,7 @@ const Goals = ({ isMine, userGoals }) => {
                         startDate,
                         isComplete,
                       }) => (
-                        <ListGroupItem className="checklist-entry flex-column align-items-start py-4 px-4">
+                        <ListGroupItem className="checklist-entry flex-column align-items-start py-4 px-4" key={id}>
                           <div
                             className={`checklist-item-${color} ${
                               isComplete

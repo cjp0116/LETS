@@ -14,7 +14,7 @@ const Feed = ({ username }) => {
 				const posts = username === currentUser.username
 					? await Api.getPostTimeline(currentUser.username)
 					: await Api.getPostsDetailsByUsername(username)
-				setPosts(posts.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)));
+				setPosts(posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
 			} catch (e) {
 				console.error(e);
 			}
@@ -36,7 +36,11 @@ const Feed = ({ username }) => {
 			<div className="feedWrapper">
 				{!username || username === currentUser.username && <Share />}
 				{posts.map(post => {
-					return <Post key={post.id} post={post} deletePost={() => deletePost(post.id)}/>
+					return (
+						<div key={post.id}>
+							<Post post={post} deletePost={() => deletePost(post.id)} />
+						</div>
+					)
 				})}
 			</div>
 		</div>

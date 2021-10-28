@@ -3,7 +3,6 @@ import {
   Row,
   Media,
   Col,
-  Button,
   UncontrolledDropdown,
   DropdownMenu,
   UncontrolledTooltip,
@@ -28,6 +27,7 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
                   id={m}
                   to={`/profile/${m}`}
                   onClick={(e) => e.preventDefault()}
+                  to="#"
                 >
                   <img alt="..." src={require("assets/img/placeholder.jpg")} />
                 </a>

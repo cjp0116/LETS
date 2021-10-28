@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Row,
   UncontrolledDropdown,
@@ -10,6 +10,7 @@ import {
   Col,
   Badge
 } from "reactstrap";
+
 import { format } from "timeago.js";
 // {
 //   comment_id: null;
@@ -23,69 +24,95 @@ import { format } from "timeago.js";
 //   sent_to: "jae";
 //   sender_profile_image
 // }
-const Notifications = ({ notifications, handleReadAll, handleReadOne }) => {
+const Notifications = ({ notifications, handleReadAll, handleReadOne, showAlert }) => {
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const displayNotifications = ({
-    notification_type,
-    id,
-    created_at,
-    sent_by,
-    sender_profile_image,
-    post_id,
-    comment_id,
-    message_id,
-  }) => {
+
+  const displayNotifications = ({ notification_type, id, created_at, sent_by, sender_profile_image, post_id, comment_id, message_id, }) => {
     let action;
     let identifier;
+    let options;
+    let icon;
+    let type;
     if (notification_type === "message") {
       action = `${sent_by} sent you a message`;
       identifier = message_id;
-    } else if (notification_type === "comment") {
+      icon = "ni ni-chat-round"
+      type = "success"
+    }
+    else if (notification_type === "comment") {
       action = `${sent_by} commented on your post`;
       identifier = comment_id;
-    } else if (notification_type === "like") {
+      icon = "ni ni-chat-round"
+      type = "info"
+    }
+    else if (notification_type === "like") {
       action = `${sent_by} liked your post`;
       identifier = post_id;
+      icon = "ni ni-like-2"
+      type="primary"
     }
+    else if(notification_type === "friend_request") {
+      action = `${sent_by} sent you a friend request`;
+      identifier = sent_by;
+      icon = "ni ni-circle-08";
+      type = "info"
+    }
+    options = {
+      place: "tr",
+      message: (
+        <div>
+          <span className="alert-title mr-2" data-notify="title">
+            Notification
+          </span>
+          <span data-notify="message">{action}</span>
+        </div>
+      ),
+      type,
+      icon,
+      autoDismiss : 5
+    }
+    showAlert(options);
     return (
-      <ListGroupItem
-        key={id}
-        className="list-group-item-action"
-        onClick={() => handleReadOne(id)}
-      >
-        <Row className="align-items-center">
-          <Col className="col-auto">
-            <img
-              alt="..."
-              className="avatar rounded-circle"
-              src={
-                sender_profile_image
-                  ? PF + sender_profile_image
-                  : require("assets/img/placeholder.jpg")
-              }
-            />
-          </Col>
-          <div className="col ml--2">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h4 className="mb-0 text-sm">{sent_by}</h4>
+        <ListGroupItem
+          key={id}
+          className="list-group-item-action"
+          onClick={() => handleReadOne(id)}
+        >
+          <Row className="align-items-center">
+            <Col className="col-auto">
+              <img
+                alt="..."
+                className="avatar rounded-circle"
+                src={
+                  sender_profile_image
+                    ? PF + sender_profile_image
+                    : require("assets/img/placeholder.jpg")
+                }
+              />
+            </Col>
+            <div className="col ml--2">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h4 className="mb-0 text-sm">{sent_by}</h4>
+                </div>
+                <div className="text-right text-muted">
+                  <small>{format(created_at)}</small>
+                </div>
               </div>
-              <div className="text-right text-muted">
-                <small>{format(created_at)}</small>
-              </div>
+              <p className="text-sm mb-0">{action}</p>
             </div>
-            <p className="text-sm mb-0">{action}</p>
-          </div>
-        </Row>
-      </ListGroupItem>
+          </Row>
+        </ListGroupItem>
     );
   };
 
   return (
     <UncontrolledDropdown nav>
+     
       <DropdownToggle className="nav-link" color="transparent" role="button" size="sm">
-        <i className="ni ni-bell-55" style={{ color : "white" }} />
-        <span style={{ color : "white" }}>Notifications</span>
+        <i className="ni ni-bell-55" style={{ color: "white" }} />
+        <span style={{ color: "white" }}>Notifications</span>
         <Badge size="sm">{notifications.length}</Badge>
       </DropdownToggle>
       <DropdownMenu className="dropdown-menu-xl py-0 overflow-hidden" right>

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { ListGroupItem, Media, Col } from "reactstrap";
+import { ListGroupItem, Media, Col, Badge } from "reactstrap";
 import UserContext from "UserContext";
 import Api from "api/api";
 import { format } from "timeago.js";
@@ -33,12 +33,12 @@ const Conversation = ({ conversation }) => {
     try {
       await Promise.all(unreadMessage.map(m => Api.markAsRead(currentUser.username, m.id)))
       setUnreadMessage([])
-    } catch(e) {}
+    } catch (e) { }
   }
-  
+
   return (
     <>
-      <ListGroupItem onClick={() => clearUnread()}>
+      <ListGroupItem onClick={() => clearUnread()} style={{ cursor: "pointer" }}>
         <Media>
           <img
             alt="..."
@@ -49,8 +49,8 @@ const Conversation = ({ conversation }) => {
             <div className="justify-content-between align-items-center">
               {friendsUsername.map(uName => <h6 key={uName} className="mb-0">{uName}</h6>)}
               <div>
-                {unreadMessage.length > 0 && 
-                  <small className="text-muted">{format(unreadMessage[unreadMessage.length - 1].created_at)}</small>
+                {unreadMessage.length > 0 &&
+                  <small className="text-muted mr-1">{format(unreadMessage[unreadMessage.length - 1].created_at)}<Badge color="danger">{unreadMessage.length}</Badge></small>
                 }
               </div>
             </div>
@@ -59,7 +59,6 @@ const Conversation = ({ conversation }) => {
               tag="span"
               xs="10"
             >
-              {unreadMessage.length > 0 && unreadMessage.length}
             </Col>
           </Media>
         </Media>

@@ -129,6 +129,7 @@ function Messenger() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!message.length) return;
     const roomMembersExceptMyself = currentChat?.members.filter(m => m !== currentUser.username);
     const messageBody = {
       text: message,
@@ -142,16 +143,19 @@ function Messenger() {
 
     try {
       const message = await Api.sendMessage(messageBody, currentUser.username);
-      for(const user of roomMembersExceptMyself) {
+      for (const user of roomMembersExceptMyself) {
+
         const newNotification = await Api.postNotifications(currentUser.username, {
-          sentTo : user,
-          notificationType : "message",
-          identifier : currentChat.roomId,
-          senderProfileImage : currentUserProfileImage
+          sentTo: user,
+          notificationType: "message",
+          identifier: currentChat.roomId,
+          senderProfileImage: currentUserProfileImage
         });
         handleNotification(newNotification, user)
+
+
       }
-      setMessages((messages) => [...messages, message]);
+      // setMessages((messages) => [...messages, message]);
     } catch (e) {
       console.error(e);
     }
@@ -159,9 +163,10 @@ function Messenger() {
   };
 
   const handleNotification = (returnedAPIResponse, user) => {
+    if (user === currentUser.username) return;
     socket.emit("sendNotification", {
-      senderName : currentUser.username,
-      receiverName : user,
+      senderName: currentUser.username,
+      receiverName: user,
       returnedAPIResponse
     })
   }
@@ -171,7 +176,7 @@ function Messenger() {
       await Api.leaveRoom(currentUser.username, roomId);
       setConversations(conversations.filter(convo => convo.roomId !== roomId))
       setCurrentChat(null)
-    } catch(e){}
+    } catch (e) { }
   }
 
 
@@ -187,7 +192,7 @@ function Messenger() {
     })
     .map((name) => {
       return <ListGroupItem key={name}>{name}</ListGroupItem>;
-  });
+    });
   console.debug(
     "MessengerConversations=",
     conversations,
@@ -235,8 +240,8 @@ function Messenger() {
           </Card>
           <div
             className={`${hideSearchResults
-                ? "hide-list-group-container"
-                : "list-group-container"
+              ? "hide-list-group-container"
+              : "list-group-container"
               }`}
           >
             <ListGroup className="friend-search-result">
