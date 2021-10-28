@@ -186,7 +186,7 @@ function Messenger() {
       }
     })
     .map((name) => {
-      return <ListGroupItem>{name}</ListGroupItem>;
+      return <ListGroupItem key={name}>{name}</ListGroupItem>;
   });
   console.debug(
     "MessengerConversations=",

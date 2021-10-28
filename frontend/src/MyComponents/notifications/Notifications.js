@@ -102,10 +102,13 @@ const Notifications = ({ notifications, handleReadAll, handleReadOne }) => {
 
         <DropdownItem
           className="text-center text-info font-weight-bold py-3"
-          href="#pablo"
-          onClick={(e) => e.preventDefault()}
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            handleReadAll()
+          }}
         >
-          View all
+          Clear all
         </DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>
