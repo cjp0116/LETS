@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8900;
-const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`))
+const INDEX = "/index.html";
+const server = app.use((req, res) => {
+  return res.sendFile(INDEX, { root : __dirname })
+}).listen(PORT, () => console.log(`Listening on ${PORT}`))
 const REACT_APP_URL = "https://delicate-market.surge.sh" ||"http://localhost:3000"
 
 const io = require("socket.io")(server)
