@@ -1,27 +1,20 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import UserContext from "UserContext";
+// reactstrap components
 import {
-  Row,
-  Media,
-  Col,
-  UncontrolledDropdown,
-  DropdownMenu,
-  UncontrolledTooltip,
-  DropdownToggle,
-  DropdownItem,
   Button, Modal, Card,
   CardBody,
   ListGroup,
   ListGroupItem,
-} from "reactstrap";
-
-import { MoreVert } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+  Col,
+  Row
+}
+from "reactstrap";
 import Api from "api/api";
-import UserContext from "UserContext";
+import { Link } from "react-router-dom";
 
-const ChatHeader = ({ members, handleLeaveRoom }) => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [modalOpen, setModalOpen] = useState(false);
+function UserListModal({ buttonText, modalTitle, userListType = "friends", modalOpen, setModalOpen }) {
+  const PF = process.env.REACT_APP_PUBLIC_URL;
   const [users, setUsers] = useState([]);
   const { friendsUsernames } = useContext(UserContext);
   useEffect(() => {
@@ -36,65 +29,19 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
         console.error(e);
       }
     };
-    modalOpen && fetchFriends();
-  }, [modalOpen]);
-
+    if (userListType === "friends") fetchFriends();
+  }, [userListType]);
   return (
-    <Row>
-      <Col md="10">
-        <Media className="align-items-center">
-          <div className="avatar-group">
-            {members?.map((m) => (
-              <>
-                <a
-                  className="avatar rounded-circle"
-                  tag={Link}
-                  id={m}
-                  to={`/profile/${m}`}
-                  onClick={(e) => e.preventDefault()}
-                  to="#"
-                >
-                  <img alt="..." src={require("assets/img/placeholder.jpg")} />
-                </a>
-                <UncontrolledTooltip delay={0} target={m}>
-                  {m}
-                </UncontrolledTooltip>
-              </>
-            ))}
-          </div>
-          <Media body>
-            {members?.map((m) => (
-              <h6 key={m} className="mb-0 d-block">
-                {m}
-              </h6>
-            ))}
-          </Media>
-        </Media>
-      </Col>
-
-      <Col md="1" xs="3">
-        <UncontrolledDropdown>
-          <DropdownToggle color="transparent" role="button" size="sm">
-            <MoreVert />
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem onClick={handleLeaveRoom}>
-              <span>Leave</span>
-            </DropdownItem>
-            <DropdownItem>
-              <span onClick={() => setModalOpen(!modalOpen)}>Add</span>
-            </DropdownItem>
-            <DropdownItem>
-              <span>Deactivate Notification</span>
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      </Col>
-
-      {modalOpen && (<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
+    <>
+      <span
+        onClick={() => setModalOpen(!modalOpen)}
+      >
+        {buttonText}
+      </span>
+      <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
         <div className="modal-header">
           <h5 className="modal-title" id="exampleModalLongTitle">
-            Add friend to chat
+            {modalTitle}
           </h5>
           <button
             aria-label="Close"
@@ -147,8 +94,9 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
             </CardBody>
           </Card>
         </div>
-      </Modal>)}
-    </Row>
+      </Modal>
+    </>
   );
-};
-export default ChatHeader;
+}
+
+export default UserListModal;
