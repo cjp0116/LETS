@@ -1,11 +1,11 @@
-const REACT_APP_URL = "http://localhost:3000"
-const config = {
-  cors : {
-    origin : REACT_APP_URL
-  }
-}
-const io = require("socket.io")(8900, config);
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 8900;
+const server = app.listen(PORT, () => console.log(`Listening on ${PORT}`))
+const REACT_APP_URL = "https://delicate-market.surge.sh" ||"http://localhost:3000"
 
+const io = require("socket.io")(server)
+app.use(express.static(__dirname, ))
 /**
  *  SOCKET SERVER
  *  

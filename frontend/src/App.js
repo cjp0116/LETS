@@ -28,7 +28,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket && socket.emit("addUser", currentUser?.username);
+    socket && currentUser && socket.emit("addUser", currentUser?.username);
   }, [currentUser, socket]);
 
   useEffect(() => {
