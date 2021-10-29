@@ -26,14 +26,6 @@ const Routes = ({ signup, events, login, addEvent }) => {
   );
   return (
     <Switch>
-      <Route path="/" exact>
-        <LandingPage signup={signup} />
-      </Route>
-      
-      <Route path="/progress" exact>
-        
-      </Route>
-      
       <PrivateRoute path="/friends" exact>
         <Friends />
       </PrivateRoute>
@@ -62,7 +54,7 @@ const Routes = ({ signup, events, login, addEvent }) => {
         <Register signup={signup} login={login} />
       </Route>
 
-      <Redirect to="/" />
+      <Redirect to="/register" />
     </Switch>
   );
 };
