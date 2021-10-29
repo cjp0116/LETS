@@ -1,16 +1,11 @@
 import React from "react";
-import {
-  Row,
-  Col,
-  Card,
-  CardBody,
-} from "reactstrap";
+import { Row, Col, Card, CardBody } from "reactstrap";
 
 import { format } from "timeago.js";
 
-export const TypingMessage = props => {
+export const TypingMessage = (props) => {
   return (
-    <Row className="justify-content-start">
+    <Row className="justify-content-start" key={Date.now().toString()}>
       <Col className="col-auto">
         <Card>
           <CardBody className="p-2">
@@ -24,31 +19,31 @@ export const TypingMessage = props => {
         </Card>
       </Col>
     </Row>
-  )
-}
+  );
+};
 
 const Message = ({ mine, message }) => {
   return (
-    <>
-      <Row className={mine ? 'justify-content-end text-right' : 'justify-content-start'}>
-        <Col className="col-auto">
-          <Card className={mine ? 'bg-gradient-primary text-white' : ''}>
-            <CardBody className="p-2">
-              <p className="mb-1">
-                {message.text}
-              </p>
-              <div>
-                <small className="opacity-60">
-                  <i className="far fa-clock mr-2"></i>
-                  {format(message.createdAt)}
-                </small>
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </>
-  )
-}
+    <Row
+      className={
+        mine ? "justify-content-end text-right" : "justify-content-start"
+      }
+    >
+      <Col className="col-auto">
+        <Card className={mine ? "bg-gradient-primary text-white" : ""}>
+          <CardBody className="p-2">
+            <p className="mb-1">{message.text}</p>
+            <div>
+              <small className="opacity-60">
+                <i className="far fa-clock mr-2"></i>
+                {format(message.createdAt)}
+              </small>
+            </div>
+          </CardBody>
+        </Card>
+      </Col>
+    </Row>
+  );
+};
 
 export default Message;

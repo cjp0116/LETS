@@ -24,7 +24,6 @@ import ChatHeader from "MyComponents/messenger/ChatHeader";
 import OnlineFriends from "MyComponents/messenger/MessengerFriends";
 import "./design/messengerDesign.css";
 
-
 function Messenger() {
   const [messageFocus, setMessageFocus] = useState("");
   const [conversations, setConversations] = useState([]);
@@ -39,7 +38,8 @@ function Messenger() {
   const [hideSearchResults, setHideSearchResults] = useState(false);
 
   const [currentOnlineRoomId, setCurrentOnlineRoomId] = useState(null);
-  const { currentUser, friendsUsernames, socket, currentUserProfileImage } = useContext(UserContext);
+  const { currentUser, friendsUsernames, socket, currentUserProfileImage } =
+    useContext(UserContext);
 
   const scrollRef = useRef();
 
@@ -130,7 +130,9 @@ function Messenger() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!message.length) return;
-    const roomMembersExceptMyself = currentChat?.members.filter(m => m !== currentUser.username);
+    const roomMembersExceptMyself = currentChat?.members.filter(
+      (m) => m !== currentUser.username
+    );
     const messageBody = {
       text: message,
       roomId: currentChat?.roomId,
@@ -144,16 +146,16 @@ function Messenger() {
     try {
       const message = await Api.sendMessage(messageBody, currentUser.username);
       for (const user of roomMembersExceptMyself) {
-
-        const newNotification = await Api.postNotifications(currentUser.username, {
-          sentTo: user,
-          notificationType: "message",
-          identifier: currentChat.roomId,
-          senderProfileImage: currentUserProfileImage
-        });
-        handleNotification(newNotification, user)
-
-
+        const newNotification = await Api.postNotifications(
+          currentUser.username,
+          {
+            sentTo: user,
+            notificationType: "message",
+            identifier: currentChat.roomId,
+            senderProfileImage: currentUserProfileImage,
+          }
+        );
+        handleNotification(newNotification, user);
       }
       // setMessages((messages) => [...messages, message]);
     } catch (e) {
@@ -167,18 +169,19 @@ function Messenger() {
     socket.emit("sendNotification", {
       senderName: currentUser.username,
       receiverName: user,
-      returnedAPIResponse
-    })
-  }
+      returnedAPIResponse,
+    });
+  };
 
   const handleLeaveRoom = async (roomId) => {
     try {
       await Api.leaveRoom(currentUser.username, roomId);
-      setConversations(conversations.filter(convo => convo.roomId !== roomId))
-      setCurrentChat(null)
-    } catch (e) { }
-  }
-
+      setConversations(
+        conversations.filter((convo) => convo.roomId !== roomId)
+      );
+      setCurrentChat(null);
+    } catch (e) {}
+  };
 
   let filteredFriendsList = friendsUsernames
     .filter((friend) => {
@@ -201,7 +204,7 @@ function Messenger() {
     "MessengerMessages=",
     messages,
     "MessengerMessage=",
-    message,
+    message
   );
   return (
     <>
@@ -239,14 +242,15 @@ function Messenger() {
             </InputGroup>
           </Card>
           <div
-            className={`${hideSearchResults
-              ? "hide-list-group-container"
-              : "list-group-container"
-              }`}
+            className={`${
+              hideSearchResults
+                ? "hide-list-group-container"
+                : "list-group-container"
+            }`}
           >
             <ListGroup className="friend-search-result">
               {filteredFriendsList.length === 0 &&
-                searchFriendText.length > 0 ? (
+              searchFriendText.length > 0 ? (
                 <ListGroupItem>No Match</ListGroupItem>
               ) : (
                 filteredFriendsList
@@ -258,7 +262,9 @@ function Messenger() {
             {conversations?.map((c) => (
               <div
                 key={c.roomId}
-                onClick={() => { setCurrentChat(c) }}
+                onClick={() => {
+                  setCurrentChat(c);
+                }}
               >
                 <Conversation conversation={c} />
               </div>
@@ -270,7 +276,12 @@ function Messenger() {
           <Card>
             <CardHeader>
               {currentChat && (
-                <ChatHeader members={currentChat?.members} handleLeaveRoom={() => handleLeaveRoom(currentChat?.roomId)} />
+                <ChatHeader
+                  currentChat={currentChat}
+                  setCurrentChat={setCurrentChat}
+                  members={currentChat?.members}
+                  handleLeaveRoom={() => handleLeaveRoom(currentChat?.roomId)}
+                />
               )}
             </CardHeader>
             <CardBody className="chat-box">

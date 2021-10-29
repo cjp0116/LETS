@@ -120,7 +120,7 @@ const Search = (props) => {
 									<Col className='name-column'>
 										<h5>
 											<a
-												href='#'
+												href='#x'
 												onClick={(e) =>
 													e.preventDefault()
 												}

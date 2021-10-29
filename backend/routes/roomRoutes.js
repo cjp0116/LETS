@@ -61,8 +61,16 @@ router.post("/:username/:roomId", ensureLoggedIn, async (req, res, next) => {
 router.delete("/:username/:roomId", ensureCorrectUserOrAdmin, async (req, res, next) => {
 	try {
 		const { username, roomId } = req.params;
-		const results = await db.query(`DELETE FROM participants WHERE username = $1 AND room_id = $2 RETURNING *`, [username, roomId]);
+		const results = await db.query(`DELETE FROM participants WHERE username = $1 AND room_id = $2 RETURNING room_id`, [username, roomId]);
 		if(!results.rows.length) throw new BadRequestError();
+		
+		// check if there's only one participant in that room, if so delete that room entirely.
+		const numParticipants = await db.query(`
+			SELECT COUNT(*) AS "numParticipants" from rooms JOIN participants ON rooms.id = participants.room_id WHERE rooms.id = $1
+		`, [roomId]);
+		if(numParticipants.rows[0].numParticipants === 1) {
+			await db.query(`DELETE FROM rooms WHERE id = $1`, [roomId])
+		}
 		return res.json({ left : roomId })
 	} catch(e) {
 		return next(e);

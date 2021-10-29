@@ -81,7 +81,9 @@ class Post {
               posts_comments_comments WHERE post_id = $1 AND post_comments_id = $2`,
               [id, commentId]
             );
+            const postCommentsLikes = await db.query(`SELECT * FROM likes WHERE post_id = $1 AND comment_id = $2`, [id, commentId])
             comment.comments = postCommentsComments.rows;
+            comment.likes = postCommentsLikes.rows;
           }
         }
       }

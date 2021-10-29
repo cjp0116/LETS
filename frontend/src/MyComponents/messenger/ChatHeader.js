@@ -8,10 +8,13 @@ import {
   UncontrolledTooltip,
   DropdownToggle,
   DropdownItem,
-  Button, Modal, Card,
+  Button,
+  Modal,
+  Card,
   CardBody,
   ListGroup,
   ListGroupItem,
+  CardHeader,
 } from "reactstrap";
 
 import { MoreVert } from "@material-ui/icons";
@@ -19,7 +22,12 @@ import { Link } from "react-router-dom";
 import Api from "api/api";
 import UserContext from "UserContext";
 
-const ChatHeader = ({ members, handleLeaveRoom }) => {
+const ChatHeader = ({
+  members,
+  handleLeaveRoom,
+  currentChat,
+  setCurrentChat,
+}) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [modalOpen, setModalOpen] = useState(false);
   const [users, setUsers] = useState([]);
@@ -30,22 +38,39 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
         const allPromise = Promise.all(
           friendsUsernames.map((uName) => Api.getCurrentUser(uName))
         );
-        const usersArray = await allPromise;
-        setUsers(usersArray);
+        const users = await allPromise;
+        const nonParticipants = users.filter(
+          (u) => !members.includes(u.username)
+        );
+        setUsers(nonParticipants);
       } catch (e) {
         console.error(e);
       }
     };
-    modalOpen && fetchFriends();
+    if (modalOpen) {
+      fetchFriends();
+    }
   }, [modalOpen]);
 
+  const handleAddParticipant = async (username) => {
+    try {
+      await Api.addParticipantToRoom(username, currentChat.roomId);
+      setCurrentChat((currentChat) => ({
+        ...currentChat,
+        members: [...members, username],
+      }));
+      setModalOpen(!modalOpen);
+    } catch (e) {
+      console.error(e);
+    }
+  };
   return (
     <Row>
       <Col md="10">
         <Media className="align-items-center">
           <div className="avatar-group">
             {members?.map((m) => (
-              <>
+              <React.Fragment key={m}>
                 <a
                   className="avatar rounded-circle"
                   tag={Link}
@@ -59,7 +84,7 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
                 <UncontrolledTooltip delay={0} target={m}>
                   {m}
                 </UncontrolledTooltip>
-              </>
+              </React.Fragment>
             ))}
           </div>
           <Media body>
@@ -81,8 +106,8 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
             <DropdownItem onClick={handleLeaveRoom}>
               <span>Leave</span>
             </DropdownItem>
-            <DropdownItem>
-              <span onClick={() => setModalOpen(!modalOpen)}>Add</span>
+            <DropdownItem onClick={() => setModalOpen(!modalOpen)}>
+              <span>Add</span>
             </DropdownItem>
             <DropdownItem>
               <span>Deactivate Notification</span>
@@ -91,29 +116,25 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
         </UncontrolledDropdown>
       </Col>
 
-      {modalOpen && (<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
-        <div className="modal-header">
-          <h5 className="modal-title" id="exampleModalLongTitle">
-            Add friend to chat
-          </h5>
-          <button
-            aria-label="Close"
-            className="close"
-            onClick={() => setModalOpen(!modalOpen)}
-            type="button"
-          >
-            <span aria-hidden={true}>×</span>
-          </button>
-        </div>
-        <div className="modal-body">
+      {modalOpen && (
+        <Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)}>
           <Card>
-            <CardBody>
+            <CardHeader className="modal-header">
+              <h5 className="h3 mb-0">Add friend to chat</h5>
+
+              <button
+                aria-label="Close"
+                className="close"
+                onClick={() => setModalOpen(!modalOpen)}
+                type="button"
+              >
+                <span aria-hidden={true}>×</span>
+              </button>
+            </CardHeader>
+            <CardBody className="modal-body">
               <ListGroup className="list my--3" flush>
                 {users.map((f) => (
-                  <ListGroupItem
-                    className="px-0"
-                    key={f.username}
-                  >
+                  <ListGroupItem className="px-0" key={f.username}>
                     <Row className="align-items-center">
                       <Col className="col-auto">
                         <Link
@@ -123,9 +144,9 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
                           <img
                             alt="..."
                             src={
-                              f.profileImage ?
-                                PF + f.profileImage :
-                                require("assets/img/placeholder.jpg")
+                              f.profileImage
+                                ? PF + f.profileImage
+                                : require("assets/img/placeholder.jpg")
                             }
                           />
                         </Link>
@@ -136,7 +157,13 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
                         </h4>
                       </div>
                       <Col className="col-auto">
-                        <Button color="primary" size="sm" type="button" className="btn-round">
+                        <Button
+                          color="primary"
+                          size="sm"
+                          type="button"
+                          onClick={() => handleAddParticipant(f.username)}
+                          className="btn-round"
+                        >
                           Add
                         </Button>
                       </Col>
@@ -146,8 +173,8 @@ const ChatHeader = ({ members, handleLeaveRoom }) => {
               </ListGroup>
             </CardBody>
           </Card>
-        </div>
-      </Modal>)}
+        </Modal>
+      )}
     </Row>
   );
 };

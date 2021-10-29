@@ -78,7 +78,7 @@ const Friends = props => {
     }
   }
 
-  console.debug("usersAwaitingMyConfirmation=", usersAwaitingMyConfirmation, "mySentRequests", mySentRequests, "myFriends=", myFriends);
+  
   return (
     <>
       <Container fluid>

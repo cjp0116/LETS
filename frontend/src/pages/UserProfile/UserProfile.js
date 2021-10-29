@@ -79,14 +79,14 @@ function UserProfile(props) {
             <div className="profileCover">
               {isMyProfile ? (
                 <>
-                  <img className="profileCoverImg" src={currentUserCoverPic ? PF + currentUserCoverPic : require("assets/img/ill/bg_contactus3.svg")} />
-                  <img className="profileUserImg" src={currentUserProfileImage ? PF + currentUserProfileImage : require("assets/img/placeholder.jpg")} />
+                  <img className="profileCoverImg" src={currentUserCoverPic ? PF + currentUserCoverPic : require("assets/img/ill/register_bg.png")} alt="..."/>
+                  <img className="profileUserImg" src={currentUserProfileImage ? PF + currentUserProfileImage : require("assets/img/placeholder.jpg")} alt="..." />
                 </>
               ) : (
                 <>
                   <img
                     className="profileCoverImg"
-                    src={loadedUser?.profileCoverImage ? PF + loadedUser?.profileCoverImage : require("assets/img/ill/bg_contactus3.svg")} alt="" />
+                    src={loadedUser?.profileCoverImage ? PF + loadedUser?.profileCoverImage : require("assets/img/ill/register_bg.png")} alt="" />
                   <img
                     className="profileUserImg"
                     src={loadedUser?.profileImage ? PF + loadedUser?.profileImage : require("assets/img/placeholder.jpg")} alt="" />

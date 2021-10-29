@@ -13,21 +13,22 @@ import {
   Col,
   UncontrolledTooltip,
 } from "reactstrap";
-import Alert from 'MyComponents/common/Alert'
+import Alert from "MyComponents/common/Alert";
 import Comment from "MyComponents/comment/Comment";
 import UserContext from "UserContext";
 import Api from "api/api";
-import './postDesign.css'
+import "./postDesign.css";
 /**
  * post = { id, postedBy, createdAt, content, createdAt }
  */
 
 import { format } from "timeago.js";
-import { regExpLiteral } from '@babel/types';
+import { regExpLiteral } from "@babel/types";
 
 function Post({ post, profileImage, deletePost }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { currentUser, friendsUsernames, currentUserProfileImage, socket } = useContext(UserContext);
+  const { currentUser, friendsUsernames, currentUserProfileImage, socket } =
+    useContext(UserContext);
 
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
@@ -38,7 +39,9 @@ function Post({ post, profileImage, deletePost }) {
   const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
-    setIsLiked(post.likes.map(l => l.username).includes(currentUser.username));
+    setIsLiked(
+      post.likes.map((l) => l.username).includes(currentUser.username)
+    );
   }, [currentUser.username, post.likes]);
 
   useEffect(() => {
@@ -55,74 +58,99 @@ function Post({ post, profileImage, deletePost }) {
         newComm
       );
       setComments((prev) => [...prev, newComment]);
-      
-      if(currentUser.username === post.postedBy) return;
-      const newNotification = await Api.postNotifications(currentUser.username, {
-        sentTo : post.postedBy,
-        notificationType : "comment",
-        identifier : newComment.id,
-        senderProfileImage : currentUserProfileImage
-      })
+
+      if (currentUser.username === post.postedBy) return;
+      const newNotification = await Api.postNotifications(
+        currentUser.username,
+        {
+          sentTo: post.postedBy,
+          notificationType: "comment",
+          identifier: newComment.id,
+          senderProfileImage: currentUserProfileImage,
+        }
+      );
       handleNotification(newNotification);
+      setShowComments(true);
+      setComment("")
     } catch (e) {
       console.error(e);
     }
   };
 
-  useEffect(()=>{
-      const reg = new RegExp('@\w*', 'i')
-      
-  }, [comment])
+  useEffect(() => {
+    const reg = new RegExp("@w*", "i");
+  }, [comment]);
 
-  const likeHandler = async () => {
+  const likeHandler = async (e) => {
+    e.preventDefault();
     await Api.likePost(post.id, currentUser.username);
     setLike(isLiked ? like - 1 : like + 1);
-    setLikes(isLiked ? 
-      likes.filter(l => l.username !== currentUser.username) : 
-        [...likes, { postId: post.id, username: currentUser.username, profileImage: currentUser.profileImage }]);
+    setLikes(
+      isLiked
+        ? likes.filter((l) => l.username !== currentUser.username)
+        : [
+            ...likes,
+            {
+              postId: post.id,
+              username: currentUser.username,
+              profileImage: currentUser.profileImage,
+            },
+          ]
+    );
     setIsLiked(!isLiked);
 
-    if(currentUser.username === post.postedBy) return;
+    if (currentUser.username === post.postedBy) return;
     const newNotification = await Api.postNotifications(currentUser.username, {
-      sentTo : post.postedBy,
-      notificationType : "like",
-      identifier : post.id,
-      senderProfileImage : currentUserProfileImage
-    })
+      sentTo: post.postedBy,
+      notificationType: "like",
+      identifier: post.id,
+      senderProfileImage: currentUserProfileImage,
+    });
     handleNotification(newNotification);
-  }
+  };
 
   const handleNotification = (returnedAPIResponse) => {
     socket.emit("sendNotification", {
-      senderName : currentUser.username,
-      receiverName : post.postedBy,
-      returnedAPIResponse
+      senderName: currentUser.username,
+      receiverName: post.postedBy,
+      returnedAPIResponse,
     });
-  }
+  };
 
-  console.log(likes)
+  console.log(likes);
   return (
-    <>
-      <Card className='posts'>
+    <div key={post?.id}>
+      <Card className="posts">
         <CardHeader className="d-flex align-items-center">
           <div className="d-flex align-items-center">
-            <a onClick={(e) => e.preventDefault()}>
-              {isMine ? <img alt="" className="avatar" src={currentUserProfileImage ? PF + currentUserProfileImage : require("assets/img/placeholder.jpg")} /> : 
-              <img
-                alt="..."
-                className="avatar"
-                src={
-                  profileImage
-                    ? PF + profileImage
-                    : require("assets/img/placeholder.jpg")
-                }
-              />}
-
+            <a onClick={(e) => e.preventDefault()} href="#x">
+              {isMine ? (
+                <img
+                  alt=""
+                  className="avatar"
+                  src={
+                    currentUserProfileImage
+                      ? PF + currentUserProfileImage
+                      : require("assets/img/placeholder.jpg")
+                  }
+                />
+              ) : (
+                <img
+                  alt="..."
+                  className="avatar"
+                  src={
+                    profileImage
+                      ? PF + profileImage
+                      : require("assets/img/placeholder.jpg")
+                  }
+                />
+              )}
             </a>
             <div className="mx-3">
               <a
                 className="text-dark font-weight-600 text-sm"
                 onClick={(e) => e.preventDefault()}
+                href="#x"
               >
                 {post?.postedBy}
               </a>
@@ -171,14 +199,25 @@ function Post({ post, profileImage, deletePost }) {
           <Row className="align-items-center my-3 pb-3 border-bottom">
             <Col sm="6">
               <div className="icon-actions">
-                <Button className="like active" size="sm" onClick={likeHandler}>
+                <a
+                  className={`like ${isLiked && "active"}`}
+                  onClick={likeHandler}
+                  href="#x"
+                >
                   <i className="ni ni-like-2"></i>
                   <span className="text-muted">{like}</span>
-                </Button>
-                <a onClick={e => {
-                  e.preventDefault();
-                  setShowComments(bool => !bool);
-                }}>
+                </a>
+                {/* <Button className="like active" size="sm" onClick={likeHandler}>
+                  <i className="ni ni-like-2"></i>
+                  <span className="text-muted">{like}</span>
+                </Button> */}
+                <a
+                  href="#x"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowComments((bool) => !bool);
+                  }}
+                >
                   <i className="ni ni-chat-round"></i>
                   <span className="text-muted">{comments.length}</span>
                 </a>
@@ -188,26 +227,31 @@ function Post({ post, profileImage, deletePost }) {
             <Col className="d-none d-sm-block" sm="6">
               <div className="d-flex align-items-center justify-content-sm-end">
                 <div className="avatar-group">
-                  {likes?.map(l => (
-                    <>
-                      <a className="avatar avatar-xs rounded-circle"
-                        key={l.username}
+                  {likes?.map((l) => (
+                    <React.Fragment key={l.username}>
+                      <a
+                        href="#x"
+                        className="avatar avatar-xs rounded-circle"
                         onClick={(e) => e.preventDefault()}
                         id={`usernameToolTip${l.username}`}
                       >
                         <img
                           alt="..."
+                          className="rounded-circle"
                           src={
-                            l.profileImage ?
-                              PF + l.profileImage :
-                              require("assets/img/placeholder.jpg")
+                            l.profileImage
+                              ? PF + l.profileImage
+                              : require("assets/img/placeholder.jpg")
                           }
                         />
                       </a>
-                      <UncontrolledTooltip delay={0} target={`usernameToolTip${l.username}`}>
+                      <UncontrolledTooltip
+                        delay={0}
+                        target={`usernameToolTip${l.username}`}
+                      >
                         {l.username}
                       </UncontrolledTooltip>
-                    </>
+                    </React.Fragment>
                   ))}
                 </div>
               </div>
@@ -216,9 +260,10 @@ function Post({ post, profileImage, deletePost }) {
 
           {/* Comments SECTION */}
           <div className="mb-1">
-            {showComments && comments.map((comment) => (
-              <Comment comment={comment} key={comment.id} />
-            ))}
+            {showComments &&
+              comments.map((comment) => (
+                <Comment comment={comment} key={comment.id} />
+              ))}
 
             <Media className="align-items-center mt-5">
               <img
@@ -246,7 +291,7 @@ function Post({ post, profileImage, deletePost }) {
           </div>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 }
 

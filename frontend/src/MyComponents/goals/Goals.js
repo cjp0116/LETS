@@ -57,13 +57,15 @@ const Goals = ({ isMine, userGoals }) => {
   };
 
   useEffect(() => {
-    setGoals(
-      userGoals?.map((g) => {
-        const color = g.color.split("-")[1];
-        return { ...g, color };
-      })
-    );
-    setCheckedIds(goals?.filter((goal) => goal.isComplete).map((g) => g.id));
+    if(userGoals) {
+      setGoals(
+        userGoals?.map((g) => {
+          const color = g.color.split("-")[1];
+          return { ...g, color };
+        })
+      );
+      setCheckedIds(goals?.filter((goal) => goal.isComplete).map((g) => g.id));
+    }
   }, [userGoals])
 
   const addGoal = (newGoal) => {

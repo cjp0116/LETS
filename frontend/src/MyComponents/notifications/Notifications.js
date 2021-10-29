@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import {
   Row,
   UncontrolledDropdown,
@@ -70,7 +70,7 @@ const Notifications = ({ notifications, handleReadAll, handleReadOne, showAlert 
       ),
       type,
       icon,
-      autoDismiss : 5
+      autoDismiss : 2
     }
     showAlert(options);
     return (

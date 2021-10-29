@@ -8,7 +8,6 @@ import {
   ListGroupItem,
   Col,
   Row,
-  Button,
 } from "reactstrap";
 import UserContext from "UserContext";
 import { Link } from "react-router-dom";
@@ -113,11 +112,6 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
                     </>
                   )}
                 </div>
-                <Col className="col-auto">
-                  <Button color="primary" size="sm" type="button" className="btn-round">
-                    Add
-                  </Button>
-                </Col>
               </Row>
             </ListGroupItem>
           ))}

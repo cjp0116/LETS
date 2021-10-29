@@ -40,7 +40,7 @@ const RightBar = ({ user }) => {
         <div className="birthdayContainer">
           <img className="birthdayImg" src={require("assets/img/gift.png")} alt="" />
           <span className="birthdayText">
-            <b>Pola Foster</b> and <b>3 other friends</b> have a birhday today.
+            <b>Jae Cho</b> and <b>3 other friends</b> have a birhday today.
           </span>
         </div>
         

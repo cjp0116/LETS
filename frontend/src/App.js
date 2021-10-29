@@ -29,8 +29,7 @@ function App() {
 
   useEffect(() => {
     socket && socket.emit("addUser", currentUser?.username);
-    console.log(socket);
-  }, [currentUser]);
+  }, [currentUser, socket]);
 
   useEffect(() => {
     console.debug("App useEffect loadUserInfo", "token=", token);
@@ -60,11 +59,8 @@ function App() {
 
     setInfoLoaded(false);
     getCurrentUser();
-  }, [token]);
+  }, [token, setLocalStorageToken]);
 
-  useEffect(() => {
-    socket && socket.on("addUser", currentUser?.username);
-  }, [currentUser]);
 
   const signup = async (signUpData) => {
     try {
@@ -94,20 +90,6 @@ function App() {
     setLocalStorageToken("token", null);
   };
 
-  const addEvent = async (username, event) => {
-    try {
-      const event = await Api.createCalendarEvent(username, event);
-      setCurrentUser((user) => {
-        return {
-          ...user,
-          events: [...user.events, event],
-        };
-      });
-    } catch (e) {
-      console.error(e);
-      return { success: false, e };
-    }
-  };
 
   if (!infoLoaded) return <Spinner className="text-primary" />;
   return (
@@ -131,7 +113,6 @@ function App() {
             login={login}
             signup={signup}
             events={currentUser?.events}
-            addEvent={addEvent}
           />
         </div>
       </UserContext.Provider>

@@ -11,10 +11,10 @@ const Conversation = ({ conversation }) => {
   const friendsUsername = conversation?.members?.filter((m) => m !== currentUser.username);
   useEffect(() => {
     socket.on("getNotification", ({ room_id, created_at, sent_by, is_seen, id }) => {
-      conversation?.roomId === room_id &&
+      conversation?.roomId !== room_id &&
         setUnreadMessage(prev => [...prev, { room_id, created_at, sent_by, is_seen, id }])
     })
-  }, [])
+  }, [conversation.roomId, socket])
 
   useEffect(() => {
     const getUnreadMessages = async () => {
@@ -27,7 +27,7 @@ const Conversation = ({ conversation }) => {
       }
     };
     getUnreadMessages();
-  }, [currentUser, conversation?.roomId]);
+  }, [currentUser, conversation.roomId]);
 
   const clearUnread = async () => {
     try {

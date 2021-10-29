@@ -147,6 +147,7 @@ CREATE OR REPLACE FUNCTION Del()
   END;
 $$;
 
+
 CREATE TRIGGER del_old_notifications 
   AFTER UPDATE ON notifications FOR EACH ROW EXECUTE PROCEDURE Del();
 

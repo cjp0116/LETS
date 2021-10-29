@@ -57,22 +57,40 @@ router.post(
   }
 );
 
-// POST /comments/:commentId/:username/like
+// PUT /comments/:commentId/:username/like
 // Like a comment
-router.post("/:commentId/:username/like", ensureCorrectUserOrAdmin, async (req, res, next) => {
-  try {
-    const { commentId, username } = req.params;
-    const likeRes = await db.query(`INSERT INTO likes (comment_id, username) VALUES ($1, $2) returning *`, [commentId, username]);
-    const finalLikesResults = await db.query(
-      `SELECT * FROM posts_comments 
-        JOIN likes ON posts_comments.id = likes.comment_id 
-        WHERE posts_comments.id = $1`, [commentId]);
-    const comment = finalLikesResults.rows;
-    return res.json({ comment })
-  } catch (e) {
-    return next(e);
+router.put(
+  "/:commentId/:username/like",
+  ensureCorrectUserOrAdmin,
+  async (req, res, next) => {
+    try {
+      const { commentId, username } = req.params;
+      const checkIfLiked = await db.query(
+        `SELECT * FROM likes WHERE username = $1 AND comment_id = $2`,
+        [username, commentId]
+      );
+      if (checkIfLiked.rows.length) {
+        //unlike it
+        const results = await db.query(
+          `DELETE FROM likes WHERE id = $1 RETURNING *`,
+          [checkIfLiked.rows[0].id]
+        );
+        return res.json({
+          unliked: results.rows[0],
+        });
+      } else {
+        // like it
+        const results = await db.query(
+          `INSERT INTO likes (username, comment_id) VALUES ($1, $2) RETURNING *`,
+          [username, commentId]
+        );
+        return res.json({ liked: results.rows[0] });
+      }
+    } catch (e) {
+      return next(e);
+    }
   }
-})
+);
 
 // DELETE /comments/:postId/:username/:commentId
 // Returns => { deleted : commentId }
@@ -89,13 +107,6 @@ router.delete(
     }
   }
 );
-
-
-
-
-
-
-
 
 // GET /comments/:postId/:username/:commentId/subcomments
 // Get all nested comments
