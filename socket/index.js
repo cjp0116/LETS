@@ -1,13 +1,21 @@
 const express = require("express");
-const app = express();
+const socketIO = require("socket.io");
+
 const PORT = process.env.PORT || 8900;
-const INDEX = "/index.html";
-const server = app.use((req, res) => {
-  return res.sendFile(INDEX, { root : __dirname })
-}).listen(PORT, () => console.log(`Listening on ${PORT}`))
+const INDEX = '/index.html';
+
+const server = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+const io = socketIO(server);
+
+
+
+
 const REACT_APP_URL = "https://delicate-market.surge.sh" ||"http://localhost:3000"
 
-const io = require("socket.io")(server)
+
 /**
  *  SOCKET SERVER
  *  
@@ -108,3 +116,5 @@ io.on("connection", socket => {
     io.to(receiver.socketId).emit("getNotification", returnedAPIResponse )
   })
 });
+
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);

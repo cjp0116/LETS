@@ -24,7 +24,8 @@ function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    setSocket(io("ws://localhost:8900"));
+    // setSocket(io("ws://localhost:8900"));
+    setSocket(io("https://workout-buddy-socket.herokuapp.com/"))
   }, []);
 
   useEffect(() => {
