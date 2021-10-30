@@ -4,11 +4,14 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.14.0",
+    "@fullcalendar/core": "^5.10.0",
     "@fullcalendar/daygrid": "^5.9.0",
     "@fullcalendar/interaction": "^5.9.0",
-    "@fullcalendar/react": "^5.9.0",
+    "@fullcalendar/react": "^5.10.0",
     "@fullcalendar/timegrid": "^5.9.0",
     "@glidejs/glide": "3.4.1",
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.3.2",
     "@testing-library/user-event": "7.1.2",
@@ -17,8 +20,6 @@
     "choices.js": "9.0.1",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
-    "@material-ui/core": "^4.11.3",
-    "@material-ui/icons": "^4.11.2",
     "headroom.js": "0.11.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "2.27.0",
@@ -40,7 +41,7 @@
     "timeago.js": "^4.0.2"
   },
   "scripts": {
-    "set-environment-variables" : "REACT_APP_BASE_URL=https://workout-buddy-backend.herokuapp.com REACT_APP_PUBLIC_FOLDER=https://workout-buddy-backend.herokuapp.com/images/ npm run build",
+    "set-environment-variables": "REACT_APP_BASE_URL=https://workout-buddy-backend.herokuapp.com REACT_APP_PUBLIC_FOLDER=https://workout-buddy-backend.herokuapp.com/images/ npm run build",
     "reset-build": "cp build/index.html build/200.html && surge build",
     "start": "react-scripts start",
     "build": "react-scripts build",

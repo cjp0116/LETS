@@ -10,7 +10,7 @@ import {
   Col,
   Badge
 } from "reactstrap";
-
+import "./notifications.css";
 import { format } from "timeago.js";
 // {
 //   comment_id: null;
@@ -109,7 +109,6 @@ const Notifications = ({ notifications, handleReadAll, handleReadOne, showAlert 
 
   return (
     <UncontrolledDropdown nav>
-     
       <DropdownToggle className="nav-link" color="transparent" role="button" size="sm">
         <i className="ni ni-bell-55" style={{ color: "white" }} />
         <span style={{ color: "white" }}>Notifications</span>
@@ -123,7 +122,8 @@ const Notifications = ({ notifications, handleReadAll, handleReadOne, showAlert 
             notifications.
           </h6>
         </div>
-        <ListGroup flush>
+  
+        <ListGroup flush className="notificationsContainer">
           {notifications.map(n => displayNotifications(n))}
         </ListGroup>
 

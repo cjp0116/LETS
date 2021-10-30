@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 // reactstrap components
 import {
   Button,
@@ -61,7 +61,7 @@ function RegisterPage(props) {
     e.preventDefault();
     const res = await props.login(loginData);
     if(res.success) {
-      history.push("/profile/" + signupData.username)
+      history.push("/profile/" + loginData.username)
     } else {
       setErrors(res.errors)
     }
@@ -83,12 +83,6 @@ function RegisterPage(props) {
       setErrors(res.errors)
     }
   };
-
-  console.debug(
-    "signupData=", signupData,
-    "loginData=", loginData,
-    "errors=", errors
-  )
   return (
     <>
       {errors.length > 0 ? <ErrorModal title="error" messages={errors} /> : null}
@@ -98,7 +92,7 @@ function RegisterPage(props) {
             className="page-header-image"
             style={{
               backgroundImage:
-                "url(" + require("assets/img/ill/p22.png") + ")",
+                "url(" + require("assets/img/ill/register_bg.png") + ")",
             }}
           ></div>
           <Container className={activeContainer}>
@@ -271,9 +265,9 @@ function RegisterPage(props) {
                     />
                   </InputGroup>
                 </FormGroup>
-                <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                <Link to="/passwordReset">
                   Forgot your password?
-                </a>
+                </Link>
                 <Button className="mt-3" color="primary" onSubmit={handleLoginSubmit}>
                   Sign In
                 </Button>

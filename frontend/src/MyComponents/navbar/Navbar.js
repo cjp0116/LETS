@@ -29,20 +29,20 @@ function NavbarOrange({ logout }) {
 
   useEffect(() => {
     socket.on("getNotification", (data) => {
-      setNotifications(prev => [...prev, data]);
+      setNotifications((prev) => [...prev, data]);
     });
   }, []);
 
   useEffect(() => {
     const getCurrentUnreadNotifications = async () => {
       try {
-        const notifications = await Api.getUserNotifications(currentUser?.username);
+        const notifications = await Api.getUserNotifications(
+          currentUser?.username
+        );
         setNotifications(notifications);
-      } catch(e) {}
-    }
-    currentUser && 
-      currentUser.username &&
-        getCurrentUnreadNotifications();
+      } catch (e) {}
+    };
+    currentUser && currentUser.username && getCurrentUnreadNotifications();
   }, [currentUser?.username]);
 
   const toggle = () => {
@@ -51,7 +51,9 @@ function NavbarOrange({ logout }) {
 
   const handleReadAll = async () => {
     try {
-      await Promise.all(notifications.map((n) => Api.markAsRead(currentUser.username, n.id)));
+      await Promise.all(
+        notifications.map((n) => Api.markAsRead(currentUser.username, n.id))
+      );
       setNotifications([]);
     } catch (e) {
       console.error(e);
@@ -66,32 +68,37 @@ function NavbarOrange({ logout }) {
       console.error(e);
     }
   };
-  const showAlert = options => {
-    notify.current.notificationAlert(options)
-  }
-  console.debug("notifications=",notifications)
+  const showAlert = (options) => {
+    notify.current.notificationAlert(options);
+  };
+  console.debug("notifications=", notifications);
   const loggedInNav = () => {
     return (
       <Nav className="ml-lg-auto" navbar>
-         <NotificationAlert ref={notify} zIndex={1031} /> 
+        <NotificationAlert ref={notify} zIndex={1031} />
         <NavItem>
           <Search />
         </NavItem>
         <NavItem>
-          <NavLink tag={Link} to="/messenger" style={{ color : "white"}}>
+          <NavLink tag={Link} to="/messenger" style={{ color: "white" }}>
             <i className="ni ni-chat-round" />
             Chat
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink tag={Link} to="/friends" style={{ color : "white" }}>
+          <NavLink tag={Link} to="/friends" style={{ color: "white" }}>
             <i className="fas fa-users" />
             Friends
           </NavLink>
         </NavItem>
 
         <UncontrolledDropdown nav>
-          <DropdownToggle className="nav-link" color="transparent" role="button" size="sm">
+          <DropdownToggle
+            className="nav-link"
+            color="transparent"
+            role="button"
+            size="sm"
+          >
             <span style={{ color: "white" }}>
               <i className="ni ni-single-02" /> {currentUser.username}
             </span>
@@ -106,7 +113,7 @@ function NavbarOrange({ logout }) {
               <span>Edit Profile</span>
             </DropdownItem>
             <DropdownItem divider></DropdownItem>
-            <DropdownItem onClick={logout} >
+            <DropdownItem onClick={logout}>
               <i className="ni ni-user-run"></i>
               <span>Logout</span>
             </DropdownItem>
@@ -140,7 +147,7 @@ function NavbarOrange({ logout }) {
       <Navbar expand="lg">
         <Container>
           <NavbarBrand tag={Link} to="/">
-            GAINS
+            <span style={{ color: "white" }}>GAINS</span>
           </NavbarBrand>
           <button className="navbar-toggler" onClick={toggle}>
             <span className="navbar-toggler-icon"></span>

@@ -33,11 +33,13 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
   }, [friendsUsernames]);
 
   useEffect(() => {
-    setOnlineFriends(
-      friendsUsernames.filter((f) =>
-        onlineUsers.map((u) => u.username).includes(f)
-      )
-    );
+    if (onlineUsers) {
+      setOnlineFriends(
+        friendsUsernames.filter((f) =>
+          onlineUsers.map((u) => u.username).includes(f)
+        )
+      );
+    }
   }, [onlineUsers, friends, friendsUsernames]);
 
   const handleClick = async (friendUsername) => {
@@ -67,7 +69,7 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
   return (
     <Card>
       <CardHeader>
-        <h5 className="h3 mb-0">Friends</h5>
+        <h5 className="h3 mb-0">My Friends</h5>
       </CardHeader>
 
       <CardBody>
@@ -87,9 +89,9 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
                     <img
                       alt="..."
                       src={
-                        f.profileImage ? 
-                        PF + f.profileImage :
-                        require("assets/img/placeholder.jpg")
+                        f.profileImage
+                          ? PF + f.profileImage
+                          : require("assets/img/placeholder.jpg")
                       }
                     />
                   </Link>

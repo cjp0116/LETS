@@ -1,11 +1,11 @@
-import React, {  useContext  } from "react";
+import React, { useContext } from "react";
 import "./sidebar.css";
 import UserContext from "UserContext";
-
-
+import { Link } from "react-router-dom";
+import OnlineFriends from "MyComponents/messenger/MessengerFriends";
 const Sidebar = ({ currentPage = "profile", setCurrentTab, currentTab }) => {
   const { currentUser, currentUserProfileImage } = useContext(UserContext);
-  const PF =  process.env.REACT_APP_PUBLIC_FOLDER;
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   let listItems;
   if (currentPage === "profile") {
@@ -31,7 +31,7 @@ const Sidebar = ({ currentPage = "profile", setCurrentTab, currentTab }) => {
         </li>
         <li
           className={`sidebarListItem ${
-            currentTab === "Progress" ? "active" : ""
+            currentTab === "Events" ? "active" : ""
           }`}
           onClick={() => setCurrentTab("Events")}
         >
@@ -85,20 +85,23 @@ const Sidebar = ({ currentPage = "profile", setCurrentTab, currentTab }) => {
       <div className="sidebarWrapper" roles="tablist">
         <ul className="sidebarList">
           <li className="sidebarFriend">
-            <img
-              className="sidebarFriendImg"
-              src={
-                currentUserProfileImage
-                  ? PF+ currentUserProfileImage
-                  : require("assets/img/placeholder.jpg")
-              }
-              alt=""
-            />
-            <span className="sidebarFriendName">{currentUser.username}</span>
+            <Link to={`/profile/${currentUser.username}`}>
+              <img
+                className="sidebarFriendImg"
+                src={
+                  currentUserProfileImage
+                    ? PF + currentUserProfileImage
+                    : require("assets/img/placeholder.jpg")
+                }
+                alt=""
+              />
+              <span className="sidebarFriendName">{currentUser.username}</span>
+            </Link>
           </li>
           {listItems}
         </ul>
         <button className="sidebarButton">Show More</button>
+        <OnlineFriends />
       </div>
     </div>
   );
