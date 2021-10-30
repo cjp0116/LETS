@@ -61,7 +61,7 @@ function RegisterPage(props) {
     e.preventDefault();
     const res = await props.login(loginData);
     if(res.success) {
-      history.push("/profile")
+      history.push("/profile/" + signupData.username)
     } else {
       setErrors(res.errors)
     }
