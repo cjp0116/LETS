@@ -1,44 +1,6 @@
-const express = require("express");
-const socketIO = require("socket.io");
-
-const PORT = process.env.PORT || 8900;
-const INDEX = '/index.html';
-
-const server = express()
-  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
-
-const io = socketIO(server);
-
-
-
-
-const REACT_APP_URL = "https://delicate-market.surge.sh" ||"http://localhost:3000"
-
-
-/**
- *  SOCKET SERVER
- *  
- *    send Event To Client
- *     -> io
- * 
- *    To send every client
- *     -> io.emit
- * 
- *    To send one client
- *     -> io.to(socketID).emit
- * 
- *    Take event from client
- *     -> socket.on
- * 
- *  CLIENT
- *   Send event to server
- *    -> socket.emit
- * 
- *   Take event from server
- *    -> socket.on
- */
-
+const app = require("express")();
+const server = require('http').createServer(app);
+const io = require("socket.io")(server);
 
 let users = [];
 let roomMembers = {};
@@ -118,3 +80,4 @@ io.on("connection", socket => {
 });
 
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+server.listen(8900)
