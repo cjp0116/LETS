@@ -1,11 +1,8 @@
 import React from "react";
-// nodejs library that concatenates classes
 import classnames from "classnames";
-// JavaScript library that creates a callendar with events
 import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interaction from "@fullcalendar/interaction";
-// react component used to create sweet alerts
 import ReactBSAlert from "react-bootstrap-sweetalert";
 // reactstrap components
 import {
@@ -21,8 +18,6 @@ import {
   Container,
   Row,
   Col,
-  Breadcrumb,
-  BreadcrumbItem,
 } from "reactstrap";
 
 import UserContext from "UserContext";
@@ -59,8 +54,9 @@ function CalendarView() {
       }
     }
     getUserCalendarEvents();
-
   }, [currentUser.username]);
+
+
   const createCalendar = (userEvents) => {
     calendar = new Calendar(calendarRef.current, {
       plugins: [interaction, dayGridPlugin],
@@ -69,6 +65,7 @@ function CalendarView() {
       editable: true,
       events: userEvents,
       headerToolbar: "",
+      eventTextColor : "#fff",
       // Add new event
       select: (info) => {
         setModalAdd(true);
@@ -113,6 +110,7 @@ function CalendarView() {
     console.log("after Adding to State=",newEvents)
 
   };
+
   const changeEvent = async () => {
     console.log("after clicking event eventId=",eventId)
     const updatedEvent = await Api.updateCalendarEvent(currentUser.username, eventId, {
@@ -132,7 +130,6 @@ function CalendarView() {
             className: radios,
             description: eventDescription,
           };
-        
           calendar.addEvent(saveNewEvent);
           return {
             ...prop,
@@ -155,24 +152,25 @@ function CalendarView() {
       console.error(e)
     }
   };
+
   const deleteEventSweetAlert = () => {
     setAlert(
       <ReactBSAlert
         warning
         style={{ display: "block", marginTop: "-100px" }}
         title="Are you sure?"
-        onConfirm={() => {
+        onCancel={() => {
           setAlert(false);
           setRadios("bg-info");
           setEventTitle(undefined);
           setEventDescription(undefined);
           setEventId(undefined);
         }}
-        onCancel={() => deleteEvent()}
+        onConfirm={() => deleteEvent()}
         confirmBtnCssClass="btn-secondary"
         cancelBtnBsStyle="danger"
-        confirmBtnText="Cancel"
-        cancelBtnText="Yes, delete it"
+        confirmBtnText="Yes, delete it"
+        cancelBtnText="Cancel"
         showCancel
         btnSize=""
       >
@@ -180,21 +178,21 @@ function CalendarView() {
       </ReactBSAlert>
     );
   };
-  const deleteEvent = () => {
+  const deleteEvent = async () => {
     var newEvents = events.filter((prop) => prop.id + "" !== eventId);
-    setEvent(undefined);
+    await Api.deleteCalendarEvent(currentUser.username, eventId);
     setAlert(
       <ReactBSAlert
         success
         style={{ display: "block", marginTop: "-100px" }}
         title="Success"
-        onConfirm={() => setAlert(null)}
+        onConfirm={() => {setAlert(null)}}
         onCancel={() => setAlert(null)}
         confirmBtnBsStyle="primary"
         confirmBtnText="Ok"
         btnSize=""
       >
-        A few words about this sweet alert ...
+        Deleted
       </ReactBSAlert>
     );
     setModalChange(false);
@@ -204,12 +202,13 @@ function CalendarView() {
     setEventDescription(undefined);
     setEventId(undefined);
     setEvent(undefined);
+    createCalendar(newEvents)
   };
 
   return (
     <>
       {alert}
-      <div className="header header-dark bg-info pb-6 content__title content__title--calendar">
+      <div className="header header-dark bg-info pb-6 content__title content__title--calendar" style={{ width : "45vw"}}>
         <Container fluid>
           <div className="header-body">
             <Row className="align-items-center py-4">
@@ -290,7 +289,6 @@ function CalendarView() {
                 />
               </CardBody>
             </Card>
-
 
 
             <Modal
