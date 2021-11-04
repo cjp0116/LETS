@@ -52,7 +52,7 @@ app.use("/room", roomRoutes);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, (path.join(__dirname, "public/images")));
+    cb(null, "public/images");
   },
   filename: (req, file, cb) => {
     cb(null, req.body.name); // public/images/req.body.name
