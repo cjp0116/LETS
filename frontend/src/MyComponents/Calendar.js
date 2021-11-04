@@ -1,11 +1,13 @@
 import React from "react";
+// nodejs library that concatenates classes
 import classnames from "classnames";
 // JavaScript library that creates a callendar with events
 import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interaction from "@fullcalendar/interaction";
+// react component used to create sweet alerts
 import ReactBSAlert from "react-bootstrap-sweetalert";
-
+// reactstrap components
 import {
   Button,
   ButtonGroup,
@@ -19,12 +21,16 @@ import {
   Container,
   Row,
   Col,
+  Breadcrumb,
+  BreadcrumbItem,
 } from "reactstrap";
 
+import UserContext from "UserContext";
+import Api from "api/api"
 let calendar;
 
 function CalendarView() {
-  const [events, setEvents] = React.useState();
+  const [events, setEvents] = React.useState(null);
   const [alert, setAlert] = React.useState(null);
   const [modalAdd, setModalAdd] = React.useState(false);
   const [modalChange, setModalChange] = React.useState(false);
@@ -34,21 +40,34 @@ function CalendarView() {
   const [eventId, setEventId] = React.useState(null);
   const [eventTitle, setEventTitle] = React.useState(null);
   const [eventDescription, setEventDescription] = React.useState(null);
+
+
   // eslint-disable-next-line
   const [event, setEvent] = React.useState(null);
   const [currentDate, setCurrentDate] = React.useState(null);
   const calendarRef = React.useRef(null);
+  const {currentUser} = React.useContext(UserContext);
+
   React.useEffect(() => {
-    createCalendar();
-    // eslint-disable-next-line
-  }, []);
-  const createCalendar = () => {
+    const getUserCalendarEvents = async () => {
+      try {
+        const userEvents = await Api.getUserCalendarEvents(currentUser.username);
+        setEvents(userEvents);
+        createCalendar(userEvents);
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    getUserCalendarEvents();
+
+  }, [currentUser.username]);
+  const createCalendar = (userEvents) => {
     calendar = new Calendar(calendarRef.current, {
       plugins: [interaction, dayGridPlugin],
       initialView: "dayGridMonth",
       selectable: true,
       editable: true,
-      events: events,
+      events: userEvents,
       headerToolbar: "",
       // Add new event
       select: (info) => {
@@ -74,58 +93,67 @@ function CalendarView() {
     calendar.changeView(newView);
     setCurrentDate(calendar.view.title);
   };
-  const addNewEvent = () => {
+  const addNewEvent = async () => {
     var newEvents = events;
-    newEvents.push({
+    const apiResults = await Api.createCalendarEvent(currentUser.username, {
       title: eventTitle,
       start: startDate,
       end: endDate,
-      className: radios,
-      id: events[events.length - 1] + 1,
+      backgroundColor: radios
     });
-    calendar.addEvent({
-      title: eventTitle,
-      start: startDate,
-      end: endDate,
-      className: radios,
-      id: events[events.length - 1] + 1,
-    });
+    console.log("API Results newEvent=",apiResults)
+    newEvents.push(apiResults);
+    calendar.addEvent(apiResults);
     setModalAdd(false);
     setEvents(newEvents);
     setStartDate(undefined);
     setEndDate(undefined);
     setRadios("bg-info");
     setEventTitle(undefined);
+    console.log("after Adding to State=",newEvents)
+
   };
-  const changeEvent = () => {
-    var newEvents = events.map((prop, key) => {
-      if (prop.id + "" === eventId + "") {
-        setEvent(undefined);
-        calendar.getEventById(eventId).remove();
-        let saveNewEvent = {
-          ...prop,
-          title: eventTitle,
-          className: radios,
-          description: eventDescription,
-        };
-        calendar.addEvent(saveNewEvent);
-        return {
-          ...prop,
-          title: eventTitle,
-          className: radios,
-          description: eventDescription,
-        };
-      } else {
-        return prop;
-      }
-    });
-    setModalChange(false);
-    setEvents(newEvents);
-    setRadios("bg-info");
-    setEventTitle(undefined);
-    setEventDescription(undefined);
-    setEventId(undefined);
-    setEvent(undefined);
+  const changeEvent = async () => {
+    console.log("after clicking event eventId=",eventId)
+    const updatedEvent = await Api.updateCalendarEvent(currentUser.username, eventId, {
+      description : eventDescription,
+      title : eventTitle,
+      className : radios,
+    })
+    console.log(updatedEvent)
+    try {
+      var newEvents = events.map((prop, key) => {
+        if (prop.id + "" === eventId + "") {
+          setEvent(undefined);
+          calendar.getEventById(eventId).remove();
+          let saveNewEvent = {
+            ...prop,
+            title: eventTitle,
+            className: radios,
+            description: eventDescription,
+          };
+        
+          calendar.addEvent(saveNewEvent);
+          return {
+            ...prop,
+            title: eventTitle,
+            className: radios,
+            description: eventDescription,
+          };
+        } else {
+          return prop;
+        }
+      });
+      setModalChange(false);
+      setEvents(newEvents);
+      setRadios("bg-info");
+      setEventTitle(undefined);
+      setEventDescription(undefined);
+      setEventId(undefined);
+      setEvent(undefined);
+    } catch(e) {
+      console.error(e)
+    }
   };
   const deleteEventSweetAlert = () => {
     setAlert(
@@ -181,7 +209,7 @@ function CalendarView() {
   return (
     <>
       {alert}
-      <div className="header header-dark bg-info pb-6 content__title content__title--calendar" style={{ width : "35vw", height : "20vh"}}>
+      <div className="header header-dark bg-info pb-6 content__title content__title--calendar">
         <Container fluid>
           <div className="header-body">
             <Row className="align-items-center py-4">
@@ -189,6 +217,7 @@ function CalendarView() {
                 <h6 className="fullcalendar-title h2 text-white d-inline-block mb-0 mr-1">
                   {currentDate}
                 </h6>
+               
               </Col>
               <Col className="mt-3 mt-md-0 text-md-right" lg="6">
                 <Button
@@ -243,6 +272,8 @@ function CalendarView() {
           </div>
         </Container>
       </div>
+
+
       <Container className="mt--6" fluid>
         <Row>
           <div className="col">
@@ -259,6 +290,9 @@ function CalendarView() {
                 />
               </CardBody>
             </Card>
+
+
+
             <Modal
               isOpen={modalAdd}
               toggle={() => setModalAdd(false)}
@@ -354,6 +388,8 @@ function CalendarView() {
                 </Button>
               </div>
             </Modal>
+
+            
             <Modal
               isOpen={modalChange}
               toggle={() => setModalChange(false)}
@@ -361,6 +397,7 @@ function CalendarView() {
             >
               <div className="modal-body">
                 <Form className="edit-event--form">
+                  
                   <FormGroup>
                     <label className="form-control-label">Event title</label>
                     <Input
@@ -371,6 +408,7 @@ function CalendarView() {
                       onChange={(e) => setEventTitle(e.target.value)}
                     />
                   </FormGroup>
+
                   <FormGroup>
                     <label className="form-control-label d-block mb-3">
                       Status color

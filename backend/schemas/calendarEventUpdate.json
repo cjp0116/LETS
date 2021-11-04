@@ -3,25 +3,32 @@
   "$id": "http://example.com/example.json",
   "type": "object",
   "properties": {
-    "eventTitle" : {
+    "id" : {
+      "type" : "integer"
+    },
+    "title" : {
       "type" : "string",
       "minLength" : 1
     },
-    "eventDescription" : {
+    "description" : {
       "type" : "string",
       "minLength" : 1
     },
-    "startDate" : {
+    "start" : {
       "type" : "string",
       "minLength" : 1
     },
-    "endDate" : {
+    "end" : {
     	"type" : "string",
     	"minLength" : 1
     },
     "radios" : {
     	"type" : "string",
     	"minLength" : 1
+    },
+    "className" : {
+      "type" : "string",
+      "minLength" : 1
     }
   },
   "additionalProperties": false,

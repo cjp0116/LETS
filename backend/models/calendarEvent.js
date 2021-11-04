@@ -9,10 +9,10 @@ class CalendarEvent {
     const res = await db.query(
       `SELECT
         id,
-        event_title AS "eventTitle",
-        event_description AS "eventDescription",
-        start_date AS "start",
-        end_date AS "end",
+        title,
+        description,
+        start,
+        "end",
         radios AS "className" 
           FROM calendar_event
          WHERE posted_by = $1
@@ -25,10 +25,10 @@ class CalendarEvent {
     const res = await db.query(
       `SELECT
         id,
-        event_title AS "title",
-        event_description AS "description",
-        start_date AS "start",
-        end_date AS "end",
+        title,
+        description,
+        start,
+        "end",
         radios AS "backgroundColor" 
         FROM calendar_event
          WHERE id = $1
@@ -45,20 +45,20 @@ class CalendarEvent {
     if(!preCheck.rows.length) throw new NotFoundError();
     const res = await db.query(
       `INSERT INTO calendar_event
-        (posted_by, event_title, event_description, start_date, end_date, radios)
+        (posted_by, title, description, start, "end", radios)
          VALUES
          ($1, $2, $3, $4, $5, $6)
           RETURNING
           id,
-          event_title AS "title",
-          event_description AS "description",
-          start_date AS "start",
-          end_date AS "end",
-          radios AS "backgroundColor" `, 
+          title,
+          description,
+          start,
+          "end",
+          radios AS "className" `, 
           [
             username, 
             data.title, 
-            data.description, 
+            data.description || "", 
             data.start, 
             data.end, 
             data.backgroundColor
@@ -79,23 +79,21 @@ class CalendarEvent {
   static async update(id, data) {
     const { setCols, values } = sqlForPartialUpdate(data, {
           postedBy : "posted_by",
-          eventTitle : "event_title",
-          eventDescription : "event_description",
-          startDate : "start_date",
-          endDate : "end_date",
-          radios : "radios"
+          radios : "radios",
+          end : `"end"`,
+          className : "radios"
         });
     const idIndex = `$${values.length + 1}`
     const querySQL = `UPDATE calendar_event
         SET ${setCols}
         WHERE id = ${idIndex}
         RETURNING
-          id,
-          event_title AS "title",
-          event_description AS "description",
-          start_date AS "start",
-          end_date AS "end",
-          radios AS "backgroundColor"`;
+        id,
+        title,
+        description,
+        start,
+        "end",
+        radios AS "className" `;
 
     const res = await db.query(querySQL, [...values, id]);
     const event = res.rows[0];

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
+const BASE_URL = "http://localhost:3001";
 // const BASE_URL="https://workout-buddy-backend.herokuapp.com";
 /** API Class.
  *
@@ -71,7 +71,10 @@ class Api {
       "DELETE"
     );
   }
-
+  static async updateCalendarEvent(currentUsername, eventId, data) {
+    const res = await this.request(`calendar-events/${currentUsername}/${eventId}`, data, "PUT");
+    return res.event;
+  }
   // post stuff
   static async createPost(currentUsername, content) {
     const res = await this.request(`posts/${currentUsername}`, content, "POST");

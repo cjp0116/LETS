@@ -84,7 +84,7 @@ async function seedData() {
 
 
      		INSERT INTO calendar_event
-		      (posted_by, event_title, start_date, end_date, radios)
+		      (posted_by, title, start, "end", radios)
 		        VALUES  
 		      ('charles', 'Charles title', '2021/10/31', '2021/11/1', 'bg-info'),
 		      ('jae', 	 'Jae title',     '2021/10/31', '2021/11/1', 'bg-danger');
