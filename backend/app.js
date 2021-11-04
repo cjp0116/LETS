@@ -1,5 +1,4 @@
 "use strict";
-
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -12,7 +11,7 @@ const {
   ensureLoggedIn,
   ensureCorrectUserOrAdmin,
 } = require("./middleware/auth");
-
+const dotenv = require("dotenv");
 const multer = require("multer");
 
 // ROUTES IMPORTS
@@ -30,7 +29,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const knexDb = require("./knexDb");
 const db = require("./db");
-
+dotenv.config()
 app.use(cors());
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
@@ -53,7 +52,7 @@ app.use("/room", roomRoutes);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/images");
+    cb(null, (path.join(__dirname, "public/images")));
   },
   filename: (req, file, cb) => {
     cb(null, req.body.name); // public/images/req.body.name
