@@ -120,7 +120,7 @@ function UserProfile(props) {
                     {posts?.map((p) => (
                       <div key={p.id}>
                         <Post
-                          profileImage={loadedUser.profileImage}
+                          profileImage={loadedUser?.profileImage}
                           loadedUser={loadedUser}
                           type="Posts"
                           post={p}
