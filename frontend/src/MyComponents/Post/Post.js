@@ -117,7 +117,6 @@ function Post({ post, profileImage, deletePost }) {
     });
   };
 
-  console.log(likes);
   return (
     <div key={post?.id}>
       <Card className="posts">

@@ -14,6 +14,7 @@ const {
 const dotenv = require("dotenv");
 const multer = require("multer");
 
+app.use(express.static(path.join(__dirname, "public")));
 // ROUTES IMPORTS
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -31,7 +32,7 @@ const knexDb = require("./knexDb");
 const db = require("./db");
 dotenv.config()
 app.use(cors());
-app.use("/images", express.static(path.join(__dirname, "public/images")));
+
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -52,10 +53,10 @@ app.use("/room", roomRoutes);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/images");
+    cb(null, "public");
   },
   filename: (req, file, cb) => {
-    cb(null, req.body.name); // public/images/req.body.name
+    cb(null, req.body.name); // public/req.body.name
   },
 });
 
