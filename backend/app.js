@@ -14,7 +14,7 @@ const {
 const dotenv = require("dotenv");
 const multer = require("multer");
 
-app.use(express.static(path.join(__dirname, "public")));
+
 // ROUTES IMPORTS
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -32,7 +32,7 @@ const knexDb = require("./knexDb");
 const db = require("./db");
 dotenv.config()
 app.use(cors());
-
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -134,7 +134,7 @@ app.delete(
         await db.query(`UPDATE posts SET image = NULL WHERE id = $1`, [postId])
       }
 			
-      await fs.promises.unlink(path.join(__dirname, "public/images/"+filename))
+      await fs.promises.unlink(path.join(__dirname, "public/"+filename))
       return res.json({ deleted : filename })
     } 
 		catch (e) {
