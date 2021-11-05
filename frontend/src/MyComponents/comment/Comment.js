@@ -7,7 +7,7 @@ import UserContext from "UserContext";
 import "./commentDesign.css";
 
 const Comment = ({ comment }) => {
-  const [numLikes, setNumLikes] = useState(comment.likes.length);
+  const [numLikes, setNumLikes] = useState(comment.likes?.length);
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(comment.likes);
   const {currentUser} = useContext(UserContext);
