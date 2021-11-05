@@ -3,6 +3,7 @@ import "./sidebar.css";
 import UserContext from "UserContext";
 import { Link } from "react-router-dom";
 import OnlineFriends from "MyComponents/messenger/MessengerFriends";
+
 const Sidebar = ({ currentPage = "profile", setCurrentTab, currentTab }) => {
   const { currentUser, currentUserProfileImage } = useContext(UserContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;

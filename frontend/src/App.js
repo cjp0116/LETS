@@ -26,10 +26,14 @@ function App() {
   useEffect(() => {
     // setSocket(io("ws://localhost:8900"));
     setSocket(io())
+
   }, []);
 
   useEffect(() => {
-    socket && currentUser && socket.emit("addUser", currentUser?.username);
+    socket 
+      && currentUser 
+        && socket.emit("addUser", currentUser?.username);
+        console.log(socket);
   }, [currentUser, socket]);
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const BASE_URL = "http://localhost:3001";
-const BASE_URL="https://workout-buddy-backend.herokuapp.com";
+const BASE_URL = "http://localhost:3001";
+// const BASE_URL="https://workout-buddy-backend.herokuapp.com";
 /** API Class.
  *
  * Static class tying together methods used to get/send to to the API.
@@ -65,7 +65,7 @@ class Api {
   }
 
   static async deleteCalendarEvent(currentUsername, eventId) {
-    const res = await this.request(
+    await this.request(
       `calendar-events/${currentUsername}/${eventId}`,
       {},
       "DELETE"
@@ -236,7 +236,7 @@ class Api {
     id,
     data = { seenDate: Date.now, isSeen: true }
   ) {
-    const res = await this.request(
+    await this.request(
       `notifications/${username}/${id}`,
       data,
       "PUT"

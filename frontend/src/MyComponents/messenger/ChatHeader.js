@@ -77,7 +77,7 @@ const ChatHeader = ({
                   id={m}
                   to={`/profile/${m}`}
                   onClick={(e) => e.preventDefault()}
-                  to="#"
+                  to="#x"
                 >
                   <img alt="..." src={require("assets/img/placeholder.jpg")} />
                 </a>

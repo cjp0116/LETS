@@ -1,4 +1,4 @@
-import React from "react";
+import React  from "react";
 import {
   Row,
   UncontrolledDropdown,
@@ -25,13 +25,12 @@ import { format } from "timeago.js";
 //   sender_profile_image
 // }
 const Notifications = ({ notifications, handleReadAll, handleReadOne, showAlert }) => {
-
+  let options;
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const displayNotifications = ({ notification_type, id, created_at, sent_by, sender_profile_image, post_id, comment_id, message_id, }) => {
     let action;
     let identifier;
-    let options;
     let icon;
     let type;
     if (notification_type === "message") {
@@ -59,7 +58,7 @@ const Notifications = ({ notifications, handleReadAll, handleReadOne, showAlert 
       type = "info"
     }
     options = {
-      place: "tr",
+      place: "br",
       message: (
         <div>
           <span className="alert-title mr-2" data-notify="title">

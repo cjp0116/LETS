@@ -20,7 +20,7 @@ const { BadRequestError } = require("../ExpressError");
 // GET
 // get calendar-events/[username]
 // Get all calendar events by username
-router.get("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.get("/:username", ensureLoggedIn, async (req, res, next) => {
   try {
     const { username } = req.params;
     const events = await CalendarEvent.getAll(username);
@@ -47,7 +47,7 @@ router.get("/id/:id", ensureLoggedIn, async (req, res, next) => {
 
 // POST
 // create new calendar event
-router.post("/:username", ensureCorrectUserOrAdmin, async (req, res, next) => {
+router.post("/:username", ensureLoggedIn, async (req, res, next) => {
   try {
     const validator = jsonSchema.validate(req.body, calendarEventNewSchema);
     if(!validator.valid) {

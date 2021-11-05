@@ -78,7 +78,7 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
             <ListGroupItem
               className="px-0"
               key={f.username}
-              onClick={() => handleClick(f?.username)}
+              onClick={() => {}}
             >
               <Row className="align-items-center">
                 <Col className="col-auto">
@@ -98,7 +98,7 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
                 </Col>
                 <div className="col ml--2">
                   <h4 className="mb-0">
-                    <a href="#" onClick={(e) => e.preventDefault()}>
+                    <a href="#x" onClick={(e) => e.preventDefault()}>
                       {f.firstName} {f.lastName}
                     </a>
                   </h4>

@@ -43,7 +43,7 @@ function NavbarOrange({ logout }) {
       } catch (e) {}
     };
     currentUser && currentUser.username && getCurrentUnreadNotifications();
-  }, [currentUser?.username]);
+  }, [currentUser]);
 
   const toggle = () => {
     toggleCollapseOpen((open) => !open);
@@ -68,10 +68,9 @@ function NavbarOrange({ logout }) {
       console.error(e);
     }
   };
-  const showAlert = (options) => {
-    notify.current.notificationAlert(options);
-  };
+  const showAlert = (options) => { notify.current.notificationAlert(options) };
   console.debug("notifications=", notifications);
+  
   const loggedInNav = () => {
     return (
       <Nav className="ml-lg-auto" navbar>
@@ -80,15 +79,21 @@ function NavbarOrange({ logout }) {
           <Search />
         </NavItem>
         <NavItem>
-          <NavLink tag={Link} to="/messenger" style={{ color: "white" }}>
-            <i className="ni ni-chat-round" />
-            Chat
+          <NavLink tag={Link} to="/messenger" >
+            <span style={{ color: "white" }}>
+              <i className="ni ni-chat-round" />
+              Message
+            </span>
+ 
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink tag={Link} to="/friends" style={{ color: "white" }}>
-            <i className="fas fa-users" />
-            Friends
+          <NavLink tag={Link} to="/friends" >
+            <span style={{ color: "white" }}>
+              <i className="fas fa-users" />
+              Friends
+            </span>
+     
           </NavLink>
         </NavItem>
 
@@ -146,8 +151,8 @@ function NavbarOrange({ logout }) {
     <>
       <Navbar expand="lg">
         <Container>
-          <NavbarBrand tag={Link} to="/">
-            <span style={{ color: "white" }}>GAINS</span>
+          <NavbarBrand tag={Link} to={currentUser ? `/profile/${currentUser.username}` : `/register`}>
+            <span style={{ color: "white" }}>LETS</span>
           </NavbarBrand>
           <button className="navbar-toggler" onClick={toggle}>
             <span className="navbar-toggler-icon"></span>

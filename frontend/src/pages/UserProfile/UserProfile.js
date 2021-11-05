@@ -69,8 +69,8 @@ function UserProfile(props) {
       <div className="profile">
         <Sidebar
           currentPage="profile"
-          posts={currentUser?.posts}
-          goals={currentUser?.goals}
+          posts={loadedUser?.posts}
+          goals={loadedUser?.goals}
           setCurrentTab={handleSideBarClick}
           currentTab={currentTab}
         />
@@ -134,7 +134,7 @@ function UserProfile(props) {
               </TabPane>
 
               <TabPane tabId="Events" role="tabpanel">
-                <Calendar />
+                <Calendar username={username} />
               </TabPane>
               <TabPane tabId="Feed" role="tabpanel">
                 <UserFeed username={username} />

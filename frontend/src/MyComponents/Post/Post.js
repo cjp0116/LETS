@@ -23,7 +23,6 @@ import "./postDesign.css";
  */
 
 import { format } from "timeago.js";
-import { regExpLiteral } from "@babel/types";
 
 function Post({ post, profileImage, deletePost }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -76,10 +75,6 @@ function Post({ post, profileImage, deletePost }) {
       console.error(e);
     }
   };
-
-  useEffect(() => {
-    const reg = new RegExp("@w*", "i");
-  }, [comment]);
 
   const likeHandler = async (e) => {
     e.preventDefault();
@@ -206,10 +201,6 @@ function Post({ post, profileImage, deletePost }) {
                   <i className="ni ni-like-2"></i>
                   <span className="text-muted">{like}</span>
                 </a>
-                {/* <Button className="like active" size="sm" onClick={likeHandler}>
-                  <i className="ni ni-like-2"></i>
-                  <span className="text-muted">{like}</span>
-                </Button> */}
                 <a
                   href="#x"
                   onClick={(e) => {

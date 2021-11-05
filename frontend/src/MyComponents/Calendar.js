@@ -24,7 +24,7 @@ import UserContext from "UserContext";
 import Api from "api/api"
 let calendar;
 
-function CalendarView() {
+function CalendarView({ username }) {
   const [events, setEvents] = React.useState(null);
   const [alert, setAlert] = React.useState(null);
   const [modalAdd, setModalAdd] = React.useState(false);
@@ -46,15 +46,17 @@ function CalendarView() {
   React.useEffect(() => {
     const getUserCalendarEvents = async () => {
       try {
-        const userEvents = await Api.getUserCalendarEvents(currentUser.username);
+        const userEvents = await Api.getUserCalendarEvents(username);
         setEvents(userEvents);
         createCalendar(userEvents);
       } catch (e) {
         console.error(e)
       }
     }
-    getUserCalendarEvents();
-  }, [currentUser.username]);
+    if(username) {
+      getUserCalendarEvents();
+    }
+  }, [username]);
 
 
   const createCalendar = (userEvents) => {
@@ -208,7 +210,7 @@ function CalendarView() {
   return (
     <>
       {alert}
-      <div className="header header-dark bg-info pb-6 content__title content__title--calendar" style={{ width : "45vw"}}>
+      <div className="header header-dark bg-info pb-6 content__title content__title--calendar" style={{ width: "60vw" }}>
         <Container fluid>
           <div className="header-body">
             <Row className="align-items-center py-4">

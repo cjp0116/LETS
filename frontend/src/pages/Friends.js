@@ -54,7 +54,7 @@ const Friends = props => {
     getCurrentFriends();
     getUsersWaitingForMyConfirmation();
     getMySentRequests();
-  }, [currentUser.username]);
+  }, [currentUser.username, friendsUsernames]);
 
   const handleConfirm = async (user) => {
     try {

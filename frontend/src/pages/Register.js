@@ -23,13 +23,13 @@ function RegisterPage(props) {
       document.body.classList.remove("register-page");
     };
   }, []);
-  const [activeContainer, setActiveContainer] = React.useState("");
-  const [signupNameFocus, setSignupNameFocus] = React.useState("");
-  const [signupEmailFocus, setSignupEmailFocus] = React.useState("");
-  const [signupUsernameFocus, setSignupUsernameFocus] = React.useState("");
-  const [signupPasswordFocus, setSignupPasswordFocus] = React.useState("");
-  const [signinEmailFocus, setSigninEmailFocus] = React.useState("");
-  const [signinPasswordFocus, setSigninPasswordFocus] = React.useState("");
+  const [activeContainer, setActiveContainer] = useState("");
+  const [signupNameFocus, setSignupNameFocus] = useState("");
+  const [signupEmailFocus, setSignupEmailFocus] = useState("");
+  const [signupUsernameFocus, setSignupUsernameFocus] = useState("");
+  const [signupPasswordFocus, setSignupPasswordFocus] = useState("");
+  const [signinEmailFocus, setSigninEmailFocus] = useState("");
+  const [signinPasswordFocus, setSigninPasswordFocus] = useState("");
   
   const [signupData, setSignupData] = useState({
     firstName : "",
@@ -178,6 +178,7 @@ function RegisterPage(props) {
                       placeholder="Password"
                       type="password"
                       name="password"
+                      autoComplete="new-password"
                       value={signupData.password}
                       onChange={handleSignupChange}
                       onFocus={() => setSignupPasswordFocus("focused")}
@@ -193,6 +194,7 @@ function RegisterPage(props) {
                     <Input
                       placeholder="Confirm Password"
                       type="password"
+                      autoComplete="new-password"
                       name="confirmPassword"
                       value={signupData.confirmPassword}
                       onChange={handleSignupChange}
