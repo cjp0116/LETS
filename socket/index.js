@@ -1,6 +1,10 @@
-const app = require("express")();
-const server = require('http').createServer(app);
-const io = require("socket.io")(server);
+const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer)
+
 
 let users = [];
 let roomMembers = {};
@@ -80,4 +84,4 @@ io.on("connection", socket => {
 });
 
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
-server.listen(8900)
+httpServer.listen(8900)

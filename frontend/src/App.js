@@ -34,7 +34,7 @@ function App() {
       && currentUser 
         && socket.emit("addUser", currentUser?.username);
         console.log(socket);
-  }, [currentUser, socket]);
+  }, [currentUser]);
 
   useEffect(() => {
     console.debug("App useEffect loadUserInfo", "token=", token);
