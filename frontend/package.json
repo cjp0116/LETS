@@ -40,7 +40,7 @@
   },
   "scripts": {
     "set-environment-variables": "REACT_APP_BASE_URL=https://workout-buddy-backend.herokuapp.com REACT_APP_PUBLIC_FOLDER=https://workout-buddy-backend.herokuapp.com/images/ npm run build",
-    "reset-build": "cp build/index.html build/200.html && surge build",
+    "reset-build": "cp build/index.html build/200.html && cd/build && surge",
     "start": "react-scripts start",
     "build": "react-scripts build && gulp build",
     "test": "react-scripts test",
