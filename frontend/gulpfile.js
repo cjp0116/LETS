@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 
 
-gulp.task("licenses", async function () {
+gulp.task("build", async function () {
   await gulp
     .src("build/static/js/*chunk.js", { base: "./" })
     .pipe(gulp.dest("./", { overwrite: true }));
