@@ -6,8 +6,11 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors : {
     origin : "https://descriptive-jellyfish.surge.sh",
-    methods : ['GET', 'POST']
-  }
+    methods : ['GET', 'POST'],
+    allowedHeaders : ['custom-header'],
+    credentials : true
+  },
+  allowEIO3 : true,
 })
 
 
@@ -89,4 +92,4 @@ io.on("connection", socket => {
 });
 
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
-httpServer.listen(8900)
+httpServer.listen(process.env.PORT || 8900)
