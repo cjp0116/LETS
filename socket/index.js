@@ -3,7 +3,12 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer)
+const io = new Server(httpServer, {
+  cors : {
+    origin : "https://descriptive-jellyfish.surge.sh",
+    methods : ['GET', 'POST']
+  }
+})
 
 
 let users = [];

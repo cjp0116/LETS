@@ -39,7 +39,7 @@
     "timeago.js": "^4.0.2"
   },
   "scripts": {
-    "set-environment-variables": "REACT_APP_BASE_URL=https://workout-buddy-backend.herokuapp.com REACT_APP_PUBLIC_FOLDER=https://workout-buddy-backend.herokuapp.com/images/ npm run build",
+    "set-environment-variables": "REACT_APP_BASE_URL=https://workout-buddy-backend.herokuapp.com REACT_APP_PUBLIC_FOLDER=https://workout-buddy-backend.herokuapp.com/ npm run build",
     "reset-build": "cp build/index.html build/200.html && cd build/ && surge --domain descriptive-jellyfish.surge.sh",
     "start": "react-scripts start",
     "build": "react-scripts build && gulp build",
