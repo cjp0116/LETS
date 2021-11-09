@@ -25,19 +25,12 @@ function App() {
 
   useEffect(() => {
     // setSocket(io("ws://localhost:8900"));
-    setSocket(io("wss://workout-buddy-socket.herokuapp.com", {
-      withCredentials : true,
-      extraHeaders : {
-        "custom-header" : "abcd"
-      }
-    }))
+    setSocket(io("wss://workout-buddy-socket.herokuapp.com"));
   }, []);
 
   useEffect(() => {
-    socket 
-      && currentUser 
-        && socket.emit("addUser", currentUser?.username);
-        console.log(socket);
+    socket && currentUser && socket.emit("addUser", currentUser?.username);
+    console.log(socket);
   }, [currentUser]);
 
   useEffect(() => {
@@ -57,8 +50,7 @@ function App() {
           );
           setCurrentUserProfileImage(currentUser?.profileImage);
           setCurrentUserCoverPic(currentUser?.coverPicture);
-        }
-        catch (e) {
+        } catch (e) {
           console.error("App loadUserInfo: problem loading", e);
           setCurrentUser(null);
         }
@@ -69,7 +61,6 @@ function App() {
     setInfoLoaded(false);
     getCurrentUser();
   }, [token, setLocalStorageToken]);
-
 
   const signup = async (signUpData) => {
     try {
@@ -99,7 +90,6 @@ function App() {
     setLocalStorageToken("token", null);
   };
 
-
   if (!infoLoaded) return <Spinner className="text-primary" />;
   return (
     <Router>
@@ -118,11 +108,7 @@ function App() {
       >
         <div>
           <NavBar logout={logout} socket={socket} />
-          <Routes
-            login={login}
-            signup={signup}
-            events={currentUser?.events}
-          />
+          <Routes login={login} signup={signup} events={currentUser?.events} />
         </div>
       </UserContext.Provider>
     </Router>

@@ -5,10 +5,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors : {
-    origin : "https://descriptive-jellyfish.surge.sh",
-    methods : ['GET', 'POST'],
-    allowedHeaders : ['custom-header'],
-    credentials : true
+    origin : "*",
   },
 })
 
