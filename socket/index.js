@@ -10,7 +10,6 @@ const io = new Server(httpServer, {
     allowedHeaders : ['custom-header'],
     credentials : true
   },
-  allowEIO3 : true,
 })
 
 
