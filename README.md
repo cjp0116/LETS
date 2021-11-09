@@ -1,5 +1,3 @@
-# GAINS
-- Fitness app 
-- Post progress, goals, and posts 
-- Designate a buddy to keep each other accountable
-  
+# LETS
+- Social Media App 
+- Send messages, add posts, like/comment on friends posts. 
