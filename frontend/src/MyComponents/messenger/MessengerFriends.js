@@ -12,7 +12,7 @@ import {
 import UserContext from "UserContext";
 import { Link } from "react-router-dom";
 
-const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
+const OnlineFriends = ({ setCurrentChat, onlineUsers, insideMessenger }) => {
   const [friends, setFriends] = useState([]);
   const [onlineFriends, setOnlineFriends] = useState([]);
   const { currentUser, friendsUsernames } = useContext(UserContext);
@@ -44,6 +44,7 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
 
   const handleClick = async (friendUsername) => {
     if (!friendUsername) return;
+    if (!insideMessenger) return;
     try {
       const foundConversations = await Api.findRoom(
         currentUser.username,
@@ -78,7 +79,7 @@ const OnlineFriends = ({ setCurrentChat, setConversations, onlineUsers }) => {
             <ListGroupItem
               className="px-0"
               key={f.username}
-              onClick={() => {}}
+              onClick={() => handleClick(f.username)}
             >
               <Row className="align-items-center">
                 <Col className="col-auto">

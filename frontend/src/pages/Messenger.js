@@ -328,6 +328,7 @@ function Messenger() {
           <OnlineFriends
             onlineUsers={onlineUsers}
             setCurrentChat={setCurrentChat}
+            insideMessenger
           />
         </Col>
       </Row>
